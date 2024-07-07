@@ -1,0 +1,11 @@
+[Unit]
+Description=History Tracker Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /home/aurora/Desktop/00_vinayd/00_notes/vdanepalli/codes/history_tracker.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
