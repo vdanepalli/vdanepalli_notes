@@ -3,6 +3,7 @@
 
 <details open>
     <summary> ML & DS </summary>
+
 ## Contents
 1. Machine Learning 101
 2. Python
@@ -158,7 +159,38 @@
 
 - [Elements of AI](https://www.elementsofai.com/)
 
+## Data Science Environment Setup
+
+- Anaconda - Hardware Store -- Software Distribution
+- Miniconda - Workbench -- Software Distribution
+- Conda - Personal assistant -- package manager 
+- [getting your computer ready with conda](https://www.mrdbourke.com/get-your-computer-ready-for-machine-learning-using-anaconda-miniconda-and-conda/)
+- [getting started with conda](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html)
+- [conda cheatsheet](https://cdn.fs.teachablecdn.com/wyrLtEMTQ9OsuZzc00Jf)
+- Collection of packages -- environment
+- `conda create --prefix ./env pandas numpy matplotlib scikit-learn`
+- `conda activate /Users/user/Download/temp/test_project1/env`
+- `conda env list`
+- `jupyter notebook`
+- `conda install jupyter`
+- `conda deactivate`
+- you can now simply share the entire project folder, and ash can now activate the env and continue with work
+- or you can export env to a YML file using `conda env export --prefix /Users/user/Desktop/project_1/env > environment.yml`
+- `conda env create --file environment.yml --name env_from_file`
+
+<br/>
+
+- [Jupyter for beginners](https://www.dataquest.io/blog/jupyter-notebook-tutorial/)
+- A cell can be in edit more or command mode
+- ESC -- command mode; Enter -- Edit mode
+- While in command mode, y -- code; m -- markdown
+- `![alt text](link to image)`
+
+
+## Pandas Data Analysis
+
 - 
+
 </details>
 
 <br/>
