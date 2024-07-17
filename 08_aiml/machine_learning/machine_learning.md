@@ -189,6 +189,26 @@
 
 ## Pandas Data Analysis
 
+- `conda env list` & `conda activate path_to_env`
+- ```python
+  import pandas as pd
+
+  series = pd.Series(['Toyota', 'Lexus', 'Nexus'])
+  series # 1 dimensional column object
+
+  colors = pd.Series(['Black', 'Grey', 'Matt Black'])
+
+  car_data = pd.DataFrame({"Make":series, "Color": colors})
+
+  car_sales = pd.read_csv('filename.csv')
+
+  car_sales.to_csv('newfile.csv', index = False) # index is set to True by default
+
+  online_data = pd.read_csv('path_to_file.csv')
+  ```
+- index starts at 0
+- axis = 0 --> row
+- axis = 1 --> column
 - 
 
 </details>
