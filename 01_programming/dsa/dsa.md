@@ -367,4 +367,67 @@
 
 -----
 
-# 
+# Programming Pathshala
+
+## Module 1 : Begin with Programming
+
+
+
+## Module 2 : Gearing Up 7w
+
+### Arrays and Dynamic Arrays
+
+- Fundamentals
+  - collection of elements of same data type
+  - fixed size | static arrays
+  - contiguous memory
+  - dynamic arrays
+    - amortized time complexity
+  - pass by reference (default) -- pointer or address is passed
+    - `fun (vector<int> &v)` | `fun(arr, size) & fun(arr int[], size)`
+  - pass by value -- new copy
+- 
+
+
+### Mathematics
+
+### Time and Space Complexities
+
+
+### Recursion
+
+
+### Backtracking
+
+
+
+## Module 3 : Fundamental Algorithms 4w
+
+
+
+## Module 4 : Fundamental Data Structure 6w
+
+
+
+## Module 5 : Advanced DSA 1  4w
+
+
+
+## Module 6 : Advanced DSA 2  4w
+
+
+## Module 7 : CS Fundamentals 4w
+
+
+## Module 8 : Low Level Design 3w
+
+
+## Module 9 : High Level Design 4w
+
+
+
+
+
+
+
+

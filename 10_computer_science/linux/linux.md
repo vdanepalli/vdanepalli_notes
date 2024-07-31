@@ -543,5 +543,49 @@ sudo systemctl restart nextjs
 <br/>
 
 - **Docker**
+- Race conditions, Memory Leaks, Unhandled errors
+- Vertical scaling
+- Horizontal Scaling
+- Distributed computing
+- Microservices
+- Virtual Machines : CPU allocation is fixed. Virtualizes hardware
+- Hypervisors
+- Docker Engine : runs on top of OS, and shares the OS kernel, virtualizes OS. Dynamic resource allocation
+- Daemon Process : dockerd
+- Docker Desktop
+  - Docker file : blueprint, configuration
+  - Image : OS, dependencies, code
+  - Docker Hub
+  - Container : isloated package running code; Stateless; Portable; No-vendor-lockin
+- sha-256 hash; .dockerignore
+- docker scout
+- Elastic Container Service
+- Serverless Cloud Run
+- Docker Compose : Multi Container Applications
+- Orchestration : Kubernetes, K8s
+- Google Borg
+
+<br/>
+<br/>
+
+- **Ansible**
+- OpenSource Automation Tool describing IT infrastructure with declarative code
+- Configuration Management Tool
+- Declarative Push Based YAML Code
+- Automate linux servers
+- Control Nodes and Manage nodes
+- Playbooks and plays (set of instructions) : Idempotent -- doesn't make any changes unless it has to 
+- Ansible Galaxy
+- Ansible Vault
+- Linode Alkamai Cloud Computing
+
+<br/>
+<br/>
+
+- **SST**
+- Full stack web applications with AWS
+- Open Source Tool
 - 
+
+
 # 

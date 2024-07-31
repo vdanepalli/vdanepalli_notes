@@ -99,3 +99,5 @@
     23. `<article>` -- singular pieces of content; can nest article inside article
     24. `<figure>` -- graphic, image, or diagram 
     25. `<figcaption>` -- used to describe what is in `<figure>` ; can describe multiple pieces of content within figure
+
+

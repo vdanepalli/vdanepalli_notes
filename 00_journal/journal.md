@@ -33,3 +33,19 @@
   - insertion
   - deletion
 </details>
+
+
+<details open>
+  <summary> 07-23-2024 ✓ ✘ </summary>
+
+- 50 Days of DSA Python 
+- 50 Days of LeetCode
+- System Design
+- Machine Learning 
+- Python
+- QGIS
+
+</details>
+
+-----
+  
