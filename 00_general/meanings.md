@@ -10,3 +10,9 @@
 - curtail -- to reduce or limit something, or to stop something before it is finished
 - balk -- hesitate or be unwilling to accept an idea or undertaking
 - sane -- sound mind, not made or mentally ill
+
+
+# Phrases
+
+- bread and butter
+- technical debt -- making a decision that you later on have to clean up

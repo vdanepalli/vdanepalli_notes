@@ -18,5 +18,19 @@
   - continuous data
   - types : single-band, composite, thematic
   - format : GeoTIFF, JPEG2000
+  - Extension : .tif, 
 - OpenMaps 
-  - 
+
+
+<br/><br/>
+
+- Layers Styling -- F7
+- Attribute table -- F6
+- Open Data Source Manager -- Ctrl L
+- 
+
+
+<br/><br/>
+
+- Be mindful of bad data
+- 

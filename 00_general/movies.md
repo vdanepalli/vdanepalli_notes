@@ -1,4 +1,0 @@
-## Movie
-
-- Jerry Maguire
-- w
