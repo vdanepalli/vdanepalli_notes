@@ -32,6 +32,7 @@
   - `div.test1` => div with classname as test1
 - Extensions 
   - Go Live
+  - Tailwind CSS Intellisense
 - Tags -- case insensitive
   - Containerised Tags -- contain content
   - Non-containerised Tags -- self closing tags -- do not contain any content
@@ -545,3 +546,76 @@
     </>
   }
   ````
+
+<br/>
+<br/>
+
+- State
+- You should not manually change the states. Tell react and it will handle. 
+- React has in-built methods called hooks that you can use for this purpose
+- usestatehook -- used to update the state
+- ```js
+  import {useState} from 'react'
+
+  const App = () => {
+    const [nameOfVariable, setNameOfVariable] = useState('default value') // setNameOfVariable is the function used to change state of nameOfVariable that has a default value
+
+    const changeName = () => { 
+      setNameOfVariable((prev)=> prev === "default value" ? "some value" : "default value")
+    }
+
+    return 
+      <>
+        <h1> A holds {nameOfVariable}</h1>
+        <button onClick={changeName}> change name </button>
+      </>
+  }
+  ```
+
+<br/>
+<br/>
+  
+- Maps and Filters
+- ```jsx
+
+  import {useState} from 'react'
+  const StudentList = () => {
+    const [search, setSearch] = useState('')
+
+    const movies = [
+      {id:1, name:'batman', cateogry:'dc'}, 
+      {id:2, name:'superman', category:'marvel'}
+    ]
+
+    const filtered = movies.filter((mov) => {
+      return mov.name.includes(search)
+    })
+
+    return 
+      <>
+        <input type = "text" value = {search} onChange = ((e) => setSearch(e.target.value))> // e is event obj that is passed automatically      
+
+        <ul>
+          {
+            filtered.map((movie)=> {
+              return {
+                <li key={movie.id}> {movie.name} {movie.category} </li> // key has to be unique, if it is not mentioned, will throw error
+              }
+            })
+          }
+        </ul>
+      </>
+  }
+  ```
+
+<br/>
+<br/>
+
+- Tailwind CSS
+- Utility class library; can say similar to Bootstrap
+- install tailwind css, and setup tailwind config.js (and copy paste config.js from tailwind website)
+- add tailwind directives to index.css
+- `<ht className = 'text-blue-100 sm:text-green-600 text-4xl shadow-lg - bg-green-100 lg:text-green-900'`-- mobile first, small screens (sm) large screens (lg) -- makes it responsive
+
+
+# 

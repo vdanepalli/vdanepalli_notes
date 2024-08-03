@@ -22,18 +22,6 @@
 - OpenMaps 
 
 
-<br/><br/>
-
-- Layers Styling -- F7
-- Attribute table -- F6
-- Open Data Source Manager -- Ctrl L
-
-
-<br/><br/>
-
-- Be mindful of bad data
-
-
 ## Map Academy : QGIS : Udemy
 
 ### Basics
@@ -92,3 +80,4 @@
   - Shape File -- .shx .shp .dbf  -- .prj projection file
   - If the maps look weird, it must have to do with Coordinate Reference System / Projections / Bad data
   - Attribute table - F6
+  - 
