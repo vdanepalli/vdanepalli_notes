@@ -47,5 +47,23 @@
 
 </details>
 
+
+
+<details open>
+  <summary> Day 1 : 08-07-2024 </summary>
+
+- Nothing. 
+- Ate, Binge watched netflix : The 100, and slept
+</details>
+
+
+<details open>
+  <summary> Day 2 : 08-08-2024 </summary>
+
+- Work 
+
+
+</details>
+
 -----
-  
+

@@ -209,7 +209,284 @@
 - index starts at 0
 - axis = 0 --> row
 - axis = 1 --> column
-- 
+
+
+## Numpy
+
+
+## Matplotlib
+
+
+## Scikit-learn
+
+![](assets/2024-08-19-15-43-18.png)
+
+- sklearn -- python ML Library
+  - built on numpy and matplotlib
+  - built-in ml models
+  - methods to evaluate
+  - well designed api
+
+![](assets/2024-08-19-15-45-34.png)
+
+- refresher
+  - teach computer what a snake is? ML can help
+  - procedural programs -- input --> steps --> output
+  - ml : input, output --> a robot that knows the steps / function / model / algorithm 
+- [scikit-learn-reference-notebook](section-2-data-science-and-ml-tools/scikit-learn-what-were-covering.ipynb)
+
+### Typical scikit-learn workflow 
+
+- `conda env list`
+- `conda activate path`
+- `jupyter lab` `jupyter notebook`
+- ```python
+  np.random.seed(39)
+
+  hd = pd.read_csv()
+  X = hd.drop("target", axis = 1)
+  y = hd["target"]
+
+  from sklearn.ensemble import RandomForestClassifier
+  clf = RandomForestClassifier()
+
+  clf.get_params() # default hyperparameters
+
+  from sklearn.model_selection import train_test_split
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, )
+
+  clf.fit(X_train, y_train)
+
+  y_preds = clf.predict(X_test)
+
+  clf.score(X_train, y_train) # might get 1 100%
+  clf.score(X_test, y_test)
+
+  from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+
+  classification_report(y_test, y_preds)
+  confusion_matrix(y_test, y_preds)
+  accuracy_score(y_test, y_preds)  
+  ```
+
+<br/>
+
+- ```python
+  np.random.seed(39)
+  for i in range(10, 100, 10):
+    clf = RandomForestClassifier(n_estimators=i).fit(X_train, y_train)
+    print(f"{i} estimators ==> {clf.score(X_test, y_test) * 100 :.2f} accuracy")
+  ```
+- ```python
+  import pickle
+
+  pickle.dump(clf, open("fancy_name.pkl", "wb"))
+
+  loaded_model = pickle.load(open("fancy_name.pkl", "rb"))
+  loaded_model.score(X_test, y_test)
+  ```
+
+<br/>
+
+- ```python
+  import warnings
+
+  warnings.filterwarnings("ignore")
+  warnings.filterwarnings("default")
+
+  sklearn.show_versions()
+
+  ```
+
+- `conda activate envpath`
+- `conda list`
+- `conda update packagename`
+- `conda search packagename --info` -- if dependencies required are not met, the package version can not be installed
+- `conda list python` 
+- `conda uninstall packagename`
+- `conda install python=3.6.9 sciki-learn=0.22 numpy pandas jupyter`
+
+
+### Getting data ready
+
+- Handle missing data
+- Handle text data (convert to numerical)
+- Feature scaling 
+  - uses
+    - improve model performance, convergenc, and prevents bias
+    - reduce outliers impact
+    - ensure data is on same scale and equal contributions to the model
+  - sensitive
+    - linear regression, logistic regression, neural network, PCA -- use gradient descent
+    - KNN, K-means clustering, SVM -- distance-based algorithms
+  - Normalization aka min-max scaling 
+    - rescales all values to be between 0 and 1  sklearn.preprocessing.MinMaxScaler
+  - Standardization
+    - subracts mean value from all features (resulting features have 0 mean)
+    - scales features to unit variance by dividing the feature by standard deviation `sklearn.preprocessing.StandardScaler`
+  - ![](assets/2024-08-20-08-47-39.png)
+  - usually not required for target
+  - usually not required for tree based models -- the decision tree splits node based on a single feature -- others do not have effect
+  - reading
+    - [1 Feature Scaling : Why](https://medium.com/@rahul77349/feature-scaling-why-it-is-required-8a93df1af310)
+      - puts values in same range so no variable is dominant
+      - most algorithms use euclidean distance between two data points
+        - k-nearest neighbors
+        - principal component analysis -- get features with high variance -- variance is high for high magnitude features
+        - speed up gradient descent
+        - tree based models are not distance based models and hence do not require scaling
+        - Linear Discriminant Analysis (LDA) and Naive Bayes, by design give weights to features. So scaling might not help
+    - [2 Feature Scaling with Scikit-learn](https://benalexkeen.com/feature-scaling-with-scikit-learn/)
+      - Normalization
+        - Min Max Scaling
+          - xi = x - minx(x) / max(x) - min(x)
+          - shrinks range to 0 and 1 or -1 and 1 if negative values are present
+          - sensitive to outliers; consider robust scaler if outliers are present
+          - `from sklearn.preprocessing import minmax_scale`
+          - `scaled_data = minmax_scale(original_data)`
+          - `preprocessing.MinMaxScaler().fit_transform(df)`
+        - Mean Normalization
+          - xi = x - average(x) / max(x) - min(x)
+          - `from sklearn import preprocessing`
+          - `preprocessing.Normalizer().fit(X_train).transform(X_train)`
+          - `from scipy import stats`
+          - `normalized_data = stats.boxcox(original_data)`
+        - Robust Scaler
+          - uses interquartile range and hence robust to outliers
+          - xi - Q1(x) / Q3(x) - Q1(x)
+          - `scaler = preprocessing.RobustScaler()`
+          - `robust_scaled_df = scaler.fit_transform(x)`
+          - `robust_scaled_df = pd.DataFrame(robust_scaled_df, columns=['x1', 'x2'])`
+      - In scaling you are changing the range of the data, in normalization you are changing the shape of the distribution
+      - Standardization aka z-score normalization
+        - assumes data is normally distributed; if not, not the best scaler to use
+        - resulting distribution mean = 0, standard deviation = 1
+        - xi = x - xbar (mean) / sigma (variance)
+        - `from sklearn.preprocessing import StandardScaler`
+        - `sc=StandardScaler(); X_train1=sc.fit_transform(X_train)`
+      - Scaling to unit length
+        - xi = x / mod(x)
+      - Normalizer -- each point is within one unit distance from origin of the cartesian co-ord system
+        - `scaler = preprocessing.Normalizer(); scaled_df = scaler.fit_transform(df)`
+        - `scaled_df = pd.DataFrame(scaled_df, columns=df.columns)`
+    - [3 Normalization vs Standardization](https://www.analyticsvidhya.com/blog/2020/04/feature-scaling-machine-learning-normalization-standardization/)
+      - ```python
+        from sklearn.preprocessing import MinMaxScaler
+        
+        pd.describe()
+
+        norm = MinMaxScaler().fit(X_train)
+        X_train_norm = norm.transform(X_train)
+        X_test_norm = norm.transform(X_test)
+
+        from sklearn.preprocessing import StandardScaler
+        X_train_stand = X_train.copy()
+        X_test_stand = X_test.copy()
+
+        # numerical features
+        num_cols = ['Item_Weight','Item_Visibility','Item_MRP','Outlet_Establishment_Year']
+
+        # apply standardization on numerical features
+        for i in num_cols:
+
+            # fit on training data column
+            scale = StandardScaler().fit(X_train_stand[[i]])
+    
+            # transform the training data column
+            X_train_stand[i] = scale.transform(X_train_stand[[i]])
+    
+            # transform the testing data column
+            X_test_stand[i] = scale.transform(X_test_stand[[i]])
+        ```
+      - standardizing one hot encoded features would mean assigning a distribution which we do not want
+      - SVM with RBF kernel assumes that all features are centered around zero and variance is of same order -- hence standardization works best than normalization
+
+
+
+
+<br/>
+
+```python
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+# features x and labels y
+# filling aka imputing / disregarding missing values 
+# converting non-numerical to numerical -- feature engineering
+
+X = hd.drop("drop", axis = 1)
+y = hd["target"]
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, )
+
+X_train.shape, X_test.shape, y_train.shape, y_test.shape
+# ((242, 13), (61, 13), (242,), (61, ))
+
+```
+
+- Clean Data (handle missing values) ---> Transform Data (encoding data into machine understandable format | data is workable) ---> Reduce Data (dimensionality reduction | for computing optimization)
+- ```python
+
+  from sklearn.ensemble import RandomForestRegressor
+
+  model = RandomForestRegressor()
+  model.fit(X_train, y_train) # value error, could not convert string to float; or input contains NaN
+  model.score(X_test, y_test)
+
+  from sklearn.preprocessing import OneHotEncoder # Categories to numbers
+  from sklearn.compose import ColumnTransformer 
+
+  categorical_features = ['Make', 'Color', 'Doors']
+  one_hot = OneHotEncodeer()
+  transformer = ColumnTransformer([("one_hot", 
+                                    one_hot, 
+                                    categorical_features)], # apply one hot encoding to these columns
+                                    remainder='passthrough') # don't do anything for the rest of the columns
+  transformed_X = transformer.fit_transform(X)
+
+  pd.DataFrame(transformed_X) # col names = 0, 1, 2, 3, 4, 5, ...
+
+  dummies = pd.get_dummies(car_sales[["Make", "Color", "Doors"]]) # another approach; col names = Make_Honda Make_Lexus, ...
+  ```
+
+![](assets/2024-08-19-16-45-28.png)
+
+- In newer versions sklearn >= 0.23 -- OneHotEncoder class was upgraded to handle None and NaN values
+- `sklearn.__version__`
+
+### Missing values 
+- Imputing : filling with some value
+- Remove samples altogether
+- Using pandas
+  - ```python
+    df.isna().sum() # missing values in each col
+
+    df['col'].fillna("missing", inplace=True) # fills missing as value
+    df['col'].fillna(df['col'].mean(), inplace=True)
+    df['col'].value_counts()
+
+    df.dropna(inplace=True) # removes rows with missing values
+    ```
+- Using sikit-learn
+  - ```python
+
+    ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </details>
 
@@ -218,4 +495,95 @@
 <br/>
 
 
-# 
+------
+
+
+# Data Camp : Machine Learning 
+
+## Supervised Learning with scikit-learn
+
+- Supervised
+  - Classification
+  - Regression -- continuous value
+  - requirements
+    - no missing values
+    - data in numeric format
+    - data stored in pandas DF or Numpy Array
+- Unsupervised
+
+<br/>
+
+```python
+from sklearn.module import Model 
+
+model = Model()
+model.fit(X, y)
+predictions = model.predict(X_new)
+print(predictions)
+```
+
+- binary classification
+  - zero or one
+- k-Nearest Neighbors
+  - looks at k closest labeled data points
+  - takes a majority vote
+ 
+```python
+from sklearn.neighbors import KNeighborsClassifier 
+
+X = churn_df[['col1', 'col2']].values
+y = churn_df['col3'].values # .values converts to numpy arrays 
+
+knn = kNeighborsClassifier(n_neighbors = 12)
+knn.fit =(X, y)
+
+predictions = knn.predict(X_new) # numpy array
+```
+
+<br/>
+
+- Accuracy crct_predictions/total_observations
+- large k -- less complex -- can cause underfitting
+- small k -- more complex -- can cause overfitting
+
+```python
+from sklearn.model_selection import train_test_split
+
+X = churn_df.drop("churn", axis=1).values
+y = churn_df["churn"].values
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, random_state=42, stratify=y) # target label proportions reflect that of the original dataset.
+
+knn = KNeighborsClassifier(n_neighbors=5)
+
+knn.fit(X_train, y_train)
+
+print(knn.score(X_test, y_test)) # Models accuracy
+
+
+neighbors = np.arange(1, 13)
+train_accuracies = {}
+test_accuracies = {}
+
+for neighbor in neighbors:
+  knn = KNeighborsClassifier(n_neighbors=neighbor)
+
+  knn.fit(X_train, y_train)
+  
+  train_accuracies[neighbor] = knn.score(X_train, y_train)
+  test_accuracies[neighbor] = knn.score(X_test, y_test)
+print(neighbors, '\n', train_accuracies, '\n', test_accuracies)
+
+
+plt.title("KNN: Varying Number of Neighbors")
+
+plt.plot(neighbors, train_accuracies.values(), label="Training Accuracy")
+
+plt.plot(neighbors, test_accuracies.values(), label="Testing Accuracy")
+
+plt.legend()
+plt.xlabel("Number of Neighbors")
+plt.ylabel("Accuracy")
+
+plt.show()
+```

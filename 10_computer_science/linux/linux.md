@@ -210,6 +210,7 @@
 - 1976 Bill Joy VI
 - 1991 Bram Moolenar VIM
 - 2014 NeoVim
+  - Scripting can be done using vimscript, Lua -- used on platforms like Roblox
 - Lua -- multiparadigm programming launguage with build in LSP Language Support Protocol
 - `~/.config/nvim/init.[vim/lua]`
 - nvchad 
@@ -585,6 +586,9 @@ sudo systemctl restart nextjs
 - **SST**
 - Full stack web applications with AWS
 - Open Source Tool
+- represents backend infrastructure as code (type script code)
+- S3, Lambda functions, RDS, Dynamo DB, Cognito; Built-in deployment support for NextJS, Astro, Svelvekit
+- `npx create-sst`
 - 
 
 

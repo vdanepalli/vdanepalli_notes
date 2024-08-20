@@ -943,3 +943,17 @@ class PlayerCharacter:
 ## Automation
 
 ## ML, DS
+
+----------------------------------------------------------------
+
+# Data Camp : Data Analyst with Python
+
+## Intro to Python
+
+
+## Intermediate Python
+
+- plt.plot(x, y)
+- plt.scatter(x, y)
+- plt.xscale('log')
+- 
