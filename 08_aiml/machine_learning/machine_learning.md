@@ -434,7 +434,7 @@ X_train.shape, X_test.shape, y_train.shape, y_test.shape
   model.fit(X_train, y_train) # value error, could not convert string to float; or input contains NaN
   model.score(X_test, y_test)
 
-  from sklearn.preprocessing import OneHotEncoder # Categories to numbers
+  from sklearn.preprocessing import OneHotEncoder # Categories to numbers 
   from sklearn.compose import ColumnTransformer 
 
   categorical_features = ['Make', 'Color', 'Doors']
@@ -468,16 +468,95 @@ X_train.shape, X_test.shape, y_train.shape, y_test.shape
 
     df.dropna(inplace=True) # removes rows with missing values
     ```
+- It is best to fill/transform the training set and test set separately; split first; better to keep them separate. 
 - Using sikit-learn
   - ```python
+    df.isna().sum() 
+    df.dropna(subset=['colname'], inplace=True) # drop rows contining this col val as null
 
+    from sklearn.impute import SimpleImputer
+    from sklearn.compose import ColumnTransformer
+
+    cat_imputer = SimpleImputer(strategy = "constant", fill_value = "missing")
+    door_imputer = SimpleImputer(strategy="constant", fill_value = 4)
+    num_imputer = SimpleImputer(strategy="mean")
+
+    cat_features = ["Make", "Color"]
+    door_features = ["Doors"]
+    num_features = ["Odometer"]
+
+    imputer = ColumnTransformer([
+      ('cat_imputer', cat_imputer, cat_features),
+      ('door_imputer', door_imputer, door_features), 
+      ('num_imputer', num_imputer, num_features)
+    ])
+
+    filled_X = imputer.fit_transform(X)  
+
+    pd.DataFrame(filled_X, columns = ["Make", "Color", "Doors", "Odometer"])
     ```
+### Choosing right model
+
+- sklearn refers to ML models, algorithms as estimators
+- Classification problem -- predicting category
+  - CLF -- classification estimator
+- Regression problem -- predicting number
+- [SKLearn Algorithms Map](https://scikit-learn.org/1.3/tutorial/machine_learning_map/index.html)
+
+```python
+from sklearn.datasets import fetch_california_housing
+housing = fetch_california_housing()
+housing
+
+housing_df = pd.DataFrame(housing['data'])
+housing_df.columns = housing['feature_names']
+housing_df["target_name"] = housing['target']
+
+housing_df = housing_df.drop('MedHouseVal', axis = 1)
+
+from sklearn.linear_model import Ridge
+
+model = Ridge()
+model.fit(X_train, y_train)
+model.score(X_test, y_test) # coefficient of determination for ridge by default
+
+from sklearn.ensemble import RandomForestRegressor
+
+np.random.seed(39)
+
+X = housing_df.drop('target', axis = 1)
+y = housing_df['target']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+model = RandomForestRegressor()
+model.fit(X_train, y_train)
+model.score(X_test, y_test) 
+
+from sklearn.svc import LinearSVC
+np.random.seed(39)
+X = df.drop('target', axis = 1)
+y = df['target']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+clf = LinearSVC()
+clf.fit(X_train, y_train)
+clf.score(X_test, y_test)
+```
+
+- If you have structured data, use ensemble methods
+- If you have unstructured data, use deep learning or transfer learning
 
 
+### Fitting a model 
 
+- 
 
+```python
+y_preds = clf.predict(X_test)
+np.mean(y_preds == y_test)
 
-
+```
 
 
 
@@ -494,6 +573,12 @@ X_train.shape, X_test.shape, y_train.shape, y_test.shape
 <hr/>
 <br/>
 
+
+## Resources 
+
+- [Intro to scikit-learn](https://github.com/mrdbourke/zero-to-mastery-ml/blob/master/section-2-data-science-and-ml-tools/introduction-to-scikit-learn.ipynb)
+- [Intro to scikit-learn video](https://github.com/mrdbourke/zero-to-mastery-ml/blob/master/section-2-data-science-and-ml-tools/introduction-to-scikit-learn-video.ipynb)
+- [Full example in google colab](https://colab.research.google.com/drive/162DyoCBFeufMjJI7n4XCiYpdqIdktZw_)
 
 ------
 
