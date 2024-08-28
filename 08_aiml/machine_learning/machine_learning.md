@@ -550,13 +550,203 @@ clf.score(X_test, y_test)
 
 ### Fitting a model 
 
-- 
-
 ```python
 y_preds = clf.predict(X_test)
 np.mean(y_preds == y_test)
 
+from sklearn.datasets import fetch_california_housing
+housing = fetch_california_housing()
+housing_df = pd.DataFrame(housing['data'], columns=housing['feature_names'])
+housing_df['target'] =  housing['target']
+
+from sklearn.linear_model import Ridge
+from sklearn.model_selection import train_test_split
+
+X = housing_df.drop('target', axis = 1)
+y = housing_df['target']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+model = Ridge()
+model.fit(X_train, y_train)
+model.score(X_test, y_test)
 ```
+
+```python
+from sklearn.ensemble import RandomForestRegressor
+
+np.random.seed(39)
+
+X = housing_df.drop('target', axis = 1)
+y = housing_df['target']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+model = RandomForestRegressor()
+model.fit(X_train, y_train)
+model.score(X_test, y_test)
+```
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+clf = RandomForestClassifier(n_estimators=100)
+clf.fit(X_train, y_train)
+y_preds = clf.predict(X_test, y_test)
+np.mean(y_preds == y_test)  # same as below
+clf.score(X_test, y_test) # same as below
+accuracy_score(y_test, y_preds) # same as above
+
+clf.predict_proba(X_test[:5])
+clf.predict(X_test[:5])
+
+from sklearn.metrics import mean_absolute_error
+mean_absolute_error(y_test, y_preds) # on average, our model is differs from prediction by this amount 
+```
+
+- evaluation 
+  - estimator score method 
+    - ```python
+      RandomForestRegressor().fit(X_train, y_train).score(X_test, y_test) # returns coefficient of determination = r_squared
+      RandomForestClassifier().fit(X_train, y_train).score(X_test, y_test) # returns mean accuracy
+      ```
+  - Scoring parameter
+    - cross_val_score(clf, X, y, scoring = None) # uses default score of estimator
+      - splits data into cv number of parts. for i in cv number of parts: consider i as test data and rest as training data
+      - model is trained on all of the data and tested on all of the data
+      - ```python
+        from sklearn.model_selection import cross_val_score
+        
+        cross_val_score(clf, X, y, cv=5) # returns array of length cv scores
+        ```
+- classification model evaluation metrics
+  - accuracy -- can use default score or cross_val_score with scoring=None
+  - area under roc curve -- receiver operating characteristic curve : AUC/ROC
+    - ROC compares models true positive rate (tpr) to false positive rate (fpr)
+    - TPR = Sensitivity -- what proprotion are correctly classified
+    - FPR = 1 - Specificity -- proportion of samples incorrectly classified as positives 
+    - True Positive, True Negative, False Positive, False Negative
+    - ![](assets/2024-08-22-15-04-11.png)
+    - ROC summarizes all of the confusion matrices produced by each threshold(sensitivity == tpr, 1 - specificity == fpr) 
+    - ![](assets/2024-08-22-15-11-33.png)
+      - We use the one with more AUC
+    - ```python
+      y_probs = clf.predict_proba(X_test)
+      y_probs[:10], len(y_probs)
+      y_probs_positive = y_probs[:, 1]
+
+      fpr, tpr, thresholds = roc_curve(y_test, y_probs_positive)
+
+      import matplotlib.pyplot as plt
+
+      def plot_roc_curve(fpr, tpr):
+        """
+        Plots ROC
+        """
+
+        plt.plot(fpr, tpr, color="yellow", label="ROC") # perfect is go straight up and the go right
+
+        plt.plot([0, 1], [0, 1], color="darkblue", linestyle="--", label="Guessing") # diagonal line
+
+        plt.xlabel("False positive rate")
+        plt.ylabel("True positive rate")
+        plt.title("ROC Curve")
+        plt.legend()
+        plt.show()
+
+      plot_roc_curve(fpr, tpr)
+
+      from sklearn.metrics import roc_auc_score
+
+      fpr, tpr, thresholds = roc_curve(y_test, y_probs_positive)
+      roc_auc_score(y_test, y_p´´robs_positive) # perfect is one
+      ```
+  #### Confusion Matrix
+
+  ---
+
+  **Confusion Matrix** --  evaluate the performance of a classification model. compares the actual target values with the predicted values. The matrix shows the count of true positives, true negatives, false positives, and false negatives, which can then be used to calculate various performance metrics.
+
+  ---
+
+  ##### Components of a Confusion Matrix:
+
+  - **True Positive (TP)**: The number of cases where the model correctly predicted the positive class.
+  - **True Negative (TN)**: The number of cases where the model correctly predicted the negative class.
+  - **False Positive (FP)**: The number of cases where the model incorrectly predicted the positive class (Type I error).
+  - **False Negative (FN)**: The number of cases where the model incorrectly predicted the negative class (Type II error).
+
+  ---
+
+  ##### Confusion Matrix Structure:
+
+  \[
+  \begin{array}{|c|c|c|}
+  \hline
+  \textbf{Actual / Predicted} & \textbf{Positive} & \textbf{Negative} \\
+  \hline
+  \textbf{Positive} & TP & FN \\
+  \hline
+  \textbf{Negative} & FP & TN \\
+  \hline
+  \end{array}
+  \]
+
+  ---
+
+  ##### Example:
+
+  Consider a binary classification problem where a model predicts whether an email is spam (positive class) or not spam (negative class). After running the model on a test dataset, the following results are obtained:
+
+  - True Positives (TP) = 50 (Spam emails correctly identified as spam)
+  - True Negatives (TN) = 90 (Non-spam emails correctly identified as not spam)
+  - False Positives (FP) = 10 (Non-spam emails incorrectly identified as spam)
+  - False Negatives (FN) = 5 (Spam emails incorrectly identified as not spam)
+
+  The confusion matrix for this example would look like this:
+
+  \[
+  \begin{array}{|c|c|c|}
+  \hline
+  \textbf{Actual / Predicted} & \textbf{Spam} & \textbf{Not Spam} \\
+  \hline
+  \textbf{Spam} & 50 & 5 \\
+  \hline
+  \textbf{Not Spam} & 10 & 90 \\
+  \hline
+  \end{array}
+  \]
+
+  ---
+
+  ##### Metrics Derived from the Confusion Matrix:
+
+  1. **Accuracy**: The proportion of correct predictions (both true positives and true negatives) out of all predictions.
+     \[
+     \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+     \]
+
+  2. **Precision**: The proportion of true positives out of all positive predictions.
+     \[
+     \text{Precision} = \frac{TP}{TP + FP}
+     \]
+
+  3. **Recall (Sensitivity or True Positive Rate)**: The proportion of true positives out of all actual positives.
+     \[
+     \text{Recall} = \frac{TP}{TP + FN}
+     \]
+
+  4. **F1 Score**: The harmonic mean of precision and recall, providing a single metric that balances both.
+     \[
+     F1\ \text{Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+     \]
+
+  5. **Specificity (True Negative Rate)**: The proportion of true negatives out of all actual negatives.
+     \[
+     \text{Specificity} = \frac{TN}{TN + FP}
+     \]
+
+  ---
+
+  The confusion matrix is a fundamental tool in evaluating the effectiveness of classification models, helping to diagnose issues such as model bias or class imbalance.
 
 
 

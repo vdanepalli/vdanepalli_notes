@@ -611,6 +611,249 @@
 <details open>
   <summary> DSA </summary>
 
+## 0. Algorithmic Thinking
+
+### 0.1 Big O Notation 
+
+- runtime in terms of <u>how quickly it grows</u> <u>relative to the input</u>, <u>as input gets large</u>
+- O(1), O(n), O(n^2), ... ; throw out constants or less significant terms
+- Space complexity -- additional space apart from inputs
+- <u>**Tradeoff**</u> -- time and space
+- <u>**Sometimes constants matter**</u> -- even if it doesn't effect Big O; say you cut down a script run time by 5 times
+- <u>**Beware of premature optimisation**</u> -- might negatively impact readability or coding time
+
+
+### 0.2 Data Structures for Coding Interviews
+
+#### RAM 
+
+- Random Access Memory -- Working memory -- Volatile
+- Storage -- Disk -- Persistent
+- Processor --> Memory Controller (unlike Disks has direct access to) --> RAM (addresses -- 8 bits )
+- Reading from sequential addresses is faster than jumping around because of caching
+
+#### Binary Numbers
+
+- Base 10 -- Decimal -- powers of 10 
+- Base  2 -- Binary  -- powers of  2
+- Base 16 -- Hexadecimal -- prefixed with `0x or #`
+- Unsigned Integer
+- Fractions -- store numerator and denominator
+- Decimals -- number with decimal point taken out, position where the decimal point goes from leftmost digit
+- Negative numbers -- reserve leftmost digit -- 0 positive, 1 negative
+
+#### Fixed Width Integers
+
+- 2^8 = 256 numbers
+- Integer overflow -- say you add `255 + 1` becomes `256 = 1 0000 0000`
+- tinyint, smallint, int, bigint -- SQL | Integers, Longs -- Java
+- Most integrs are fixed width == fixed length unless told otherwise
+
+#### Arrays
+
+- index -- indices
+- `arr[n] = arr + n * size of element in array` -- fast lookup
+  - each element in array must be of same size
+  - array elements must be contiguous
+
+#### Strings
+
+- Strings -- series of characters
+- Character encoding -- mapping of numbers to characters
+- ASCII 
+
+#### Pointers
+
+- Imagine pointers (addresses) to baby names being stored in babies array as integers 
+- not cache-friendly
+- lookups in pointer based arrays are still O(1)
+
+#### Dynamic Arrays 
+
+- word processor -- we don't know how many strings. 
+- normal array programmed to resize itself
+- python ruby js use these by default, but others like Java have Array and <u>**ArrayList**</u>
+- array size and array capacity
+- resize
+  - make a new big array, twice in size
+  - copy old array elements into new array
+  - free up old array
+  - append your new element -- we can call doubling appends -- special appends -- O(n)
+    - each doubling append O(n) gives you double the regular appends O(1)
+    - <u>**Amortized cost O(1)**</u> -- paying off the cost of something gradually
+    - expensive append buys many cheap appends
+    - O(m) actual appends + 2 O(m) for any doubling required
+- some appends are expensive; worst case O(n) appends; O(n) prepends always
+
+
+#### Linked Lists
+
+- Node -- two-item arrays per say
+- Linked List -- series of nodes
+- Head, tail
+- worst case O(1) appends and prepends
+- O(i) lookup times; not cache-friendly
+
+
+#### Hashtables
+
+- Say, we now want to count the frequency of words
+- Hash maps or hash tables. 
+- counts are the values and words are the keys (analogous to indices)
+- key index to array index mapping = hashing function
+- <u>**Hash collision**</u> -- two keys map to same hash value
+- Say, the value of each key is a pointer to a linked list where each node contains the word itself and the count.  
+- Lookups are O(1) on average and only in one direction
+- Looking up key given value still takes O(n) time
+
+
+### 0.3 Logarithms
+
+- what power must we raise this base to, inorder to get this answer
+- helps when solving for x when x is exponent
+- ![](assets/2024-08-27-22-35-47.png)
+- ```py
+  def binary_search(nums, key):
+    floor_index = -1
+    ceil_index = len(nums)
+
+    while floor_index + 1 < ceil_index:
+      distance = ceil_index - floor_index
+      half_distance = distance // 2
+      guess_index = floor_index + half_distance
+
+      if key < nums[guess_index]:
+        ceil_index = guess_index
+      elif key > nums[guess_index]:
+        floor_index = guess_index
+      else 
+        return True
+    return False
+  ```
+
+<br/>
+
+- Logarithms in sorting
+- Sorting : Best worst case O(n log n)
+- If we can tightly bound the range of possible numbers in our list, we can use hash map to do it in O(n) using counting sort
+- ```python
+  def merge_sort(list_to_sort):
+  # Base case: lists with fewer than 2 elements are sorted
+  if len(list_to_sort) < 2:
+      return list_to_sort
+
+  # Step 1: divide the list in half
+  # We use integer division, so we'll never get a "half index"
+  mid_index = len(list_to_sort) // 2
+  left  = list_to_sort[:mid_index]
+  right = list_to_sort[mid_index:]
+
+  # Step 2: sort each half
+  sorted_left  = merge_sort(left)
+  sorted_right = merge_sort(right)
+
+  # Step 3: merge the sorted halves
+  sorted_list = []
+  current_index_left = 0
+  current_index_right = 0
+
+  # sortedLeft's first element comes next
+  # if it's less than sortedRight's first
+  # element or if sortedRight is exhausted
+  while len(sorted_list) < len(left) + len(right):
+      if ((current_index_left < len(left)) and
+              (current_index_right == len(right) or
+               sorted_left[current_index_left] < sorted_right[current_index_right])):
+          sorted_list.append(sorted_left[current_index_left])
+          current_index_left += 1
+      else:
+          sorted_list.append(sorted_right[current_index_right])
+          current_index_right += 1
+  return sorted_list
+  ```
+
+<br/>
+
+- Logarithms in binary tree
+- Perfect tree -- each level or tier is full
+- Height h = log base 2 of (n+1 / 2) + 1 = log base 2 of (n + 1)
+- log base 2 of n == lg n
+
+## 1. Arrays and String manipulation
+
+### 1.1 Array
+
+- <span style="color: #cdf1ae;">O(1) Lookups and Appends</span>
+- <span style="color: #ff0000;">O(n) Space, Insert, Delete; fixed size</span>
+- Array slicing -- allocates a new array with selected elements; O(n) time O(n) space
+
+<br/>
+
+- Call Stack -- made of stack frames -- one for each function
+  - Local variables
+  - Arguments passed
+  - Information about caller stack frame
+  - return address
+- <u>**Be careful with recursive function.**</u> Call Stacks result in space complexities. 
+- Stack Overflow -- recursion error
+- Tail Call Optimization TCO -- very last thing a function does is call another function. This would mean we do not need to store callers stack frame, saving up space
+- Python and Java don't implement TCO
+- Inplace -- destructive -- modifies input -- have side effects
+- Out-of-place -- safer -- no side effects
+
+### 1.2 Dynamic Array
+
+- <span style="color: #cdf1ae;">O(1) Lookups O(1) Appends Average Case | O(1) Appends Worst Case</span>
+- <span style="color: #cdf1ae;">fast lookups, variable size, cache-friendly</span>
+- <span style="color: #ff0000;">O(n) Insert, Delete, Worst Case Appends</span>
+
+## 2. Hashing and Hashtable
+
+
+## 3. Greedy Algorithms
+
+
+## 4. Sorting Searching Lograithms
+
+
+## 5. Trees Graphs
+
+
+## 6. Dynamic Programming and Recursion
+
+
+## 7. Queues and Stacks
+
+
+## 8. Linked Lists
+
+
+## 9. System Dessign 
+
+
+## 10. General Programming 
+
+
+## 11. Bit Manipulation
+
+
+## 12. Combinatorics Probability and Math
+
+
+## 13. Javascript
+
+
+## 14. Coding Interview Tips
+
+
+## 15. Interview Tips
+
+
+## 16. Questions by Company
+
+
+## 17. Questions by Topics
+
 - Arrays 
   - index based
   - ordered
