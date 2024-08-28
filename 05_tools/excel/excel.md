@@ -27,7 +27,7 @@
 - Can nest if conditions. More restrictive -- outer function; less restrictive == inner function
 - `AND(test1, test2, ...)`
 - `OR(test1, test2, ...)`
-
+ 
 <br/><br/>
 
 - vlookup

@@ -5,20 +5,32 @@
 - isinstance() -- 
 - len() -- length of the object
 - enumerate() -- for index, value in enumerate(say_list_object);produces sequence of pairs
-- range() -- from, to, step ; [from, to)
-
-<br/>
-<br/>
-
----- 
-
-<br/>
-<br/>
-
-
-
+- range() -- from, to, step ; `[from, to)`
 - list -- close to an array: hybrid version of array and linkedList
 elements need not be of same type
+
+
+# PIP 
+
+- `pip install --upgrade pip`
+- `pip list --outdated`
+- `python.exe -m pip install --upgrade pip`
+
+
+<br/><br/>
+<br/><br/>
+
+- `pip-review --auto`
+
+<br/><br/>
+<br/><br/>
+
+
+- `pip install pip-review`
+- 
+
+
+
 
 
 # Educative : Python for Multithreaded Applications

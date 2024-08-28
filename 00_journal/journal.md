@@ -47,7 +47,6 @@
 
 </details>
 
-<<<<<<< Updated upstream
 
 
 <details open>
@@ -68,7 +67,5 @@
 
 -----
 
-=======
 -----
   
->>>>>>> Stashed changes
