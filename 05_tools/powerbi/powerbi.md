@@ -204,3 +204,114 @@
 ## Advanced Visualizations
 
 
+
+
+# Microsoft Power BI Desktop for Business Intelligence
+
+
+<details open>
+  <summary>  </summary>
+
+## Introduction 
+
+![](assets/2024-08-29-15-52-13.png)
+![](assets/2024-08-29-15-52-25.png)
+![](assets/2024-08-29-15-52-45.png)
+
+- frontend 
+  - model view
+  - data view
+  - report view
+- backend
+  - power query editor
+- resources
+  - help 
+  - Microsoft Power BI Blog
+  - Microsoft Power BI Youtube -- Also, Guy in a Cube
+  - Power BI User Groups -- pbiusergroup.com
+
+## Connecting and Shaping 
+
+- ![](assets/2024-08-29-16-00-22.png)
+- Home > Get Data
+- Power Query Editor 
+  - Queries Pane
+  - Query Editing Tools
+    - Home 
+    - Transform
+      - Replace Values
+    - Add Column
+      - Extract
+        - Text Before Delimitter
+  - Formula Bar
+  - Table Name and Properties
+  - Applied Steps
+  - Table Preview
+- ![](assets/2024-08-29-16-17-34.png)
+- Right click on a query and uncheck enable load in Power Query Editor -- data is not loaded to data model 
+- You can connect to a database or get data from web 
+- Data profiling  
+  - Column Quality 
+    - Valid 
+    - Error 
+    - Empty
+  - Column Distribution 
+    - Distinct 
+    - Unique
+  - Column Profile
+    - Column Statistics 
+    - Value Distribution
+    - Includes sample distribution and profiling statistics
+    - Count, Distinct, Error, Empty, Unique, Min, Max, ...
+- Keep/Remove Errors/Empty/Duplicates
+
+<br/>
+
+- ![](assets/2024-08-29-16-37-47.png)
+- ![](assets/2024-08-29-16-38-25.png)
+- ![](assets/2024-08-29-16-42-23.png)
+- Date.StartOfWeek(DateColumn, 1) -- 1 Monday 2 Tuesday ...;
+- Date.StartOfWeek(DateColumn, Day.Monday)
+- Right Click Column > Using Locale > Select Data Type and Locale
+- ![Rolling Calendars](assets/2024-08-30-09-14-44.png)
+  - convert list to table as a final step
+- Add Column 
+  - Index Column
+  - Conditional Column
+- Power BIs internal engine called Verticap uses something called query plan to optimize data when storing it in a data model. Say, if you are applying transformations in the front end then they are not part of the same query plan and might cause performance issues. 
+- ![Grouping and Aggregating](assets/2024-08-30-09-28-41.png)
+- ![Pivoting and Unpivoting](assets/2024-08-30-09-36-24.png)
+- ![Merging Queries](assets/2024-08-30-09-36-52.png)
+- ![Appending Queries](assets/2024-08-30-09-39-47.png)
+- ![Appending Files from Folder](assets/2024-08-30-09-48-45.png)
+- ![Data Source Settings](assets/2024-08-30-09-49-04.png)
+- ![Data Source Parameters](assets/2024-08-30-09-49-21.png)
+- ![Refreshing Queries](assets/2024-08-30-09-59-21.png)
+- ![Importing Excel Models](assets/2024-08-30-09-59-47.png)
+- ![Power Query Best Practices](assets/2024-08-30-10-00-14.png)
+
+## Data Model
+
+- ![Creating a Data Model](assets/2024-08-30-10-10-34.png)
+- ![Not a Data Model](assets/2024-08-30-10-11-15.png)
+- ![Data Model](assets/2024-08-30-10-11-29.png)
+- ![Data Normalization](assets/2024-08-30-10-19-19.png)
+- ![Fact and Dimension Tables](assets/2024-08-30-10-19-54.png)
+- ![Primary and Foreign Keys](assets/2024-08-30-10-20-17.png)
+- ![Relationships vs Merged Tables](assets/2024-08-30-10-20-50.png)
+- ![Model view](assets/2024-08-30-10-26-11.png)
+- ![Creating Table Relationships](assets/2024-08-30-10-26-28.png)
+- ![Managing and Editing Relationships](assets/2024-08-30-10-26-51.png)
+- ![Star and Snowflake Schemas](assets/2024-08-30-10-27-14.png)
+- ![Active and Inactive relationships](assets/2024-08-30-10-35-11.png)
+- 
+
+## Measures with DAX
+
+## Visualize
+
+## Optimize performance
+
+</details>
+
+-----

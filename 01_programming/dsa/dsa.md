@@ -809,21 +809,178 @@
 
 ## 2. Hashing and Hashtable
 
+### 2.1 Hashing and Hash Functions
+
+- think of hash as a fingerprint
+- we can trust a given file has a unique hash but we can't go back to file from hash
+- uses
+  - dictionaries 
+    - list like data structure with constant time lookups 
+    - one way is to define a list, use hash function to hash keys into list indices
+  - preventing man in the middle attacks
+    - say a software provider provides a hash: indicating their hash value
+    - now if nobody tampered with it, the hash remains same.
+
+### 2.2 Hash Table
+
+- map, dictioanry, hash 
+- <span style="color: #ff0000;">O(n) space insert lookup delete : Worst case</span>
+- <span style="color: #ff0000;">slow worst case lookups</span>, <span style="color: #ff0000;">unordered keys</span>, <span style="color: #ff0000;">single directional lookups</span> (given key get value but not other way around), <span style="color: #ff0000;">not cache-friendly</span> (many hashtable implementations use linked lists)
+- worst case lookup O(n) comes from the fact that, <u><span style="color: #ff0000;">when all keys map to same hash value</span></u>, we end up having a big linked list to traverse. Hence O(n)
+- Also, <u><span style="color: #ff0000;">when using dynamic array resizing</span></u>, it's O(n); say, things begin to get crowded and we want to double the initial array, rehash everything to find new positions -- all of this is to avoid hash collisons
+
+<br/>
+
+- <span style="color: #cdf1ae;">O(1) insert lookup O(n) space delete : Average case</span>
+- <span style="color: #cdf1ae;">fast lookups and flexible keys </span>
+
+<br/>
+
+- x mod n results in a value between 0 and n - 1 inclusive
+
+### 2.3 Sets
+
+- A set is like a hash map but only stores keys without values
 
 ## 3. Greedy Algorithms
 
+- A greedy algorithm builds up by greedily choosing the option that looks the best at every step; say you wanna give change for 39 cents using least number of coins. 25 + 10 + 4 ?
+- <u><span style="color: #ff0000;">sometimes a greedy algorithm doesn't give you an optimal solution</span></u>
+  - <span style="color: #ff0000;">To find the cheapest route visiting a set of cities, choosing to visit the cheapest city you haven't been to yet doesn't produce the cheapest overall itinerary.</span>
+  - <span style="color: #ff0000;">When filling a duffel bag with cakes of different weights and values, choosing the cake with the highest value per pound doesn't always produce the best haul.</span>
 
 ## 4. Sorting Searching Lograithms
 
+- Binary Search -- O(log n) -- as we cut the posibilities by half at each step
 
 ## 5. Trees Graphs
 
+### 5.1 Binary Tree 
+
+- binary tree : every node has two or fewer children
+- perfect binary tree : every level of the tree is completely filled
+  - number of nodes doubles as we go down the levels
+  - number of nodes in the last level = sum of all nodes in other levels + 1
+- assuming levels start from 0, nodes at nth level = 2 ^ n or 2 ^ (h-1) where level 0 is considered h = 1
+- total nodes = n = 2^h - 1
+- h = log base 2 of (n + 1)
+
+
+### 5.2 Graph
+
+- graph -- interconnected network
+- node or vertex -- connected by edges
+- representing links; scaling challenges -- most graph algorithms are O(n log n) or slower
+
+<br/>
+
+- directed vs undirected graph
+- cyclic vs acyclic graph
+- weighted or unweighted graph
+- legal coloring -- no two adjancent nodes have the same color
+
+<br/>
+
+- representations
+- edge list -- `graph = [[0, 1], [1, 2], [1, 3], [2, 3]]`
+- adjacency list -- list index represents node and value is a list of the node's neighbors
+  - ```python
+    graph = [
+      [1],
+      [0, 2, 3],
+      [1, 3],
+      [1, 2],
+    ]
+    ```
+- adjacency matrix
+  - ```python
+    graph = [
+        [0, 1, 0, 0],
+        [1, 0, 1, 1],
+        [0, 1, 0, 1],
+        [0, 1, 1, 0],
+    ]
+    ```
+- Is there a path between two nodes in this undirected graph? Run DFS or BFS from one node and see if you reach the other one.
+- What's the shortest path between two nodes in this undirected, unweighted graph? Run BFS from one node and backtrack once you reach the second. Note: **BFS always finds the shortest path, assuming the graph is undirected and unweighted. DFS does not always find the shortest path.**
+- Can this undirected graph be colored with two colors? Run BFS, assigning colors as nodes are visited. Abort if we ever try to assign a node a color different from the one it was assigned earlier.
+- Does this undirected graph have a cycle? Run BFS, keeping track of the number of times we're visiting each node. If we ever visit a node twice, then we have a cycle.
+
+<br/>
+
+- algorithms 
+- **Dijkstra's Algorithm**: Finds the shortest path from one node to all other nodes in a weighted graph.
+- **Topological Sort**: Arranges the nodes in a directed, acyclic graph in a special order based on incoming edges.
+- **Minimum Spanning Tree**: Finds the cheapest set of edges needed to reach all nodes in a weighted graph.
+
+### 5.3 Breadth First Search BFS
+
+- traverse one step or level at a time
+- <span style="color: #cdf1ae;">will find the shortest path </span>
+- <span style="color: #ff0000;">bfs on a binary tree requires more memory than a dfs</span>
+
+### 5.4 Depth First Search DFS 
+
+- one path at a time
+- <span style="color: #cdf1ae;">easy to implement using recursion. Takes less memory on a binary tree</span>
+- <span style="color: #ff0000;">will not necessarily find a shortest path</span>   
 
 ## 6. Dynamic Programming and Recursion
 
+- Memoization is a common strategy for dynamic programming problems, which are problems where the solution is composed of solutions to the same problem with smaller inputs (as with the Fibonacci problem, above). 
+- The other common strategy for dynamic programming problems is going bottom-up, which is usually cleaner and often more efficient.
+
+### 6.1 Overlapping Subproblems
+
+- A problem has overlapping subproblems if finding its solution involves solving the same subproblem multiple times.
+- Ex : Fibonacci 
+
+### 6.2 Memoization 
+
+- Memoization ensures that a function doesn't run for the same inputs more than once by keeping a record of the results for the given inputs (usually in a dictionary).
+- To avoid the duplicate work caused by the branching, we can wrap the function in a class with an attribute, memo, that maps inputs to outputs. 
+- ```python
+  class Fibber(object):
+
+  def __init__(self):
+      self.memo = {}
+
+  def fib(self, n):
+      if n < 0:
+          raise IndexError(
+              'Index was negative. '
+              'No such thing as a negative index in a series.'
+          )
+
+      # Base cases
+      if n in [0, 1]:
+          return n
+
+      # See if we've already calculated this
+      if n in self.memo:
+          print("grabbing memo[%i]" % n)
+          return self.memo[n]
+
+      print("computing fib(%i)" % n)
+      result = self.fib(n - 1) + self.fib(n - 2)
+
+      # Memoize
+      self.memo[n] = result
+
+      return result
+  ```
+
+### 6.3 Bottom up algorithms
+
+- Going bottom-up is a way to avoid recursion, saving the memory cost that recursion incurs when it builds up the call stack.
+- Put simply, a bottom-up algorithm "starts from the beginning," while a recursive algorithm often "starts from the end and works backwards."
 
 ## 7. Queues and Stacks
 
+### 7.1 Queues
+
+- 
+### 7.2 Stacks
 
 ## 8. Linked Lists
 

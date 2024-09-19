@@ -1,6 +1,7 @@
 # SQL
 
 ## ZTM Complete SQL Database
+
 <details open>
     <summary> SQL </summary>
 
@@ -52,7 +53,7 @@
 
 - Database: HW + SW used to store/organize/manage data
 - [db-fiddle](https://www.db-fiddle.com/)
-- 
+
 
 
 
@@ -1613,6 +1614,25 @@
   1. Single user  
 <br/>
 <br/>
+
+
+# Linkedin Learning : Learning SQL Programming
+
+
+<details open>
+  <summary> SQL </summary>
+
+### Introduction
+
+- [resources](https://github.com/LinkedInLearning/learningsql-2875059)
+- DB Browser for SQLite -- sqlitebrowser.org/dl
+- Github Codespaces
+- Database -- collection of information; Rows and **Columns**
+
+</details>
+
+-----
+
 
 
 # 
