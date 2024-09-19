@@ -1,8 +1,8 @@
-# ZTM : Power BI 
+# <center> ZTM : Power BI 
 
 
 <details>
-  <summary>Power BI</summary>
+  <summary></summary>
   
 - Power BI -- interactive data visualization software product developed by Microsoft primarily for Business Intelligence
 - Business Intelligence -- art and science of transforming data into actionable insights that help organizations make decisions
@@ -53,8 +53,16 @@
   - 
 </details>
 
+-----
+<br/><br/>
+-----
 
-# ZTM Power BI
+# <center> ZTM Power BI
+
+
+<details open>
+<summary>  </summary>
+
 
 - [Course resources](https://cdn.fs.teachablecdn.com/79HZUsIS0GrUoODwfEjH)
   
@@ -204,9 +212,13 @@
 ## Advanced Visualizations
 
 
+</details>
 
+-----
+<br/><br/>
+-----
 
-# Microsoft Power BI Desktop for Business Intelligence
+# <center> Udemy : Microsoft Power BI Desktop for Business Intelligence
 
 
 <details open>
@@ -315,3 +327,7 @@
 </details>
 
 -----
+<br/><br/>
+-----
+
+# 
