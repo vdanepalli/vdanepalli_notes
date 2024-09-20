@@ -399,6 +399,20 @@
 
 -----
 
+<br/>
+<br/>
+
+
+<details open>
+<summary> Python and REST APIs </summary>
+
+- REST : Architecture style = Representational State Transfer -- defines a pattern of client and server communications over network
+- API : Application Programming Interface
+</details>
+
+--------
+
+<br/><br/>
 
 
 
