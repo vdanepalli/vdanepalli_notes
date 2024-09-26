@@ -316,6 +316,9 @@
 - ![Managing and Editing Relationships](assets/2024-08-30-10-26-51.png)
 - ![Star and Snowflake Schemas](assets/2024-08-30-10-27-14.png)
 - ![Active and Inactive relationships](assets/2024-08-30-10-35-11.png)
+- ![Relationship Cardinality](assets/2024-09-26-13-50-21.png)
+- ![Ex: One to One Cardinality](assets/2024-09-26-13-50-54.png)
+- ![Ex: Many to Many Cardinality](assets/2024-09-26-13-51-16.png)
 - 
 
 ## Measures with DAX

@@ -365,7 +365,7 @@
   print("I am {0} and I am gonna kick your {1}".format(name, somepart))
   print("I am {name} and I am gonna kick your {somepart}".format(name =name, somepart=somepart))
   print(f"I am {name} and I am gonna kick your {ass}")
-
+c
   class A(object):
     def __init__(self, name, age):
         self.name = name
