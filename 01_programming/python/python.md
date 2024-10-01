@@ -968,4 +968,44 @@ class PlayerCharacter:
 - plt.plot(x, y)
 - plt.scatter(x, y)
 - plt.xscale('log')
+
+
+<br/>
+<br/>
+
+---------
+
+# RealPython 
+
+
+<details open>
+  <summary> Python Basics : Introduction to Python </summary>
+
+<br>
+
+- PATH: environment variable; tells command line where to look for files and folders
+- MAX_PATH: older versions of windows limit file paths to 260 chars, newer allow upto 32_000 chars
+- IDLE : Integrated Development and Learning Environment
+- apt : Advanced Package Tool
+- sudo : superuser do (run commands with elevated privileges)
+- sudo apt-get update
+- pip : package manager
+- sudo apt-get install python3.9 python3-pip idle-python3.9
+- REPL : Read Evaluate Print Loop
+- Runtime Errors : tracebacks are best read from bottom to top
+- python variable names can contain unicode characters
+  - mixedCase
+  - snake_case
+  - camel_case
+  - PascalCase
+- PEP : Python Enhancement Protocol -- design document used by community to propose new features or changes to language
+- Comments
+  - should always be written in complete sentences
+  - one space between # and sentence
+  - two spaces between code and inline  # comments
+  - 
 - 
+</details>
+
+-----
+
