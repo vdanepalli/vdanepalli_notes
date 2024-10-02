@@ -470,6 +470,509 @@ Car myNewCar = new Car();
 - any value passed as parameter, is copied to method arguments
 - if the argument is a reference, the reference is copied. 
 - the reference still points to the same instance as the source object reference
+
+## Access and Encapsulation
+
+- classes are essentially unique within a package. 
+- package can have multiple classes
+- `package ash.win;` -- shoudl follow the directory structure. 
+- package : grouping classes and interfaces. 
+  - can contain sub-packages
+  - provides namespacing for class names
+  - provides encapsulation - access control for code in classes
+  - no hierarchy
+- default package : classes in the source folder belong to default package
+- `import win.ash.Story;` -- Story is a class. 
+  - access a class from a diff package
+  - you can do import * for a package. 
+  - you can use fully qualified name instead of import
+- access modifiers : encapsulate and restrict access to member variables and methods
+  - public -- everyone
+  - private -- not accessible outside the class
+  - protected -- accessible by inheritance(sub classes)
+  - default -- package private; 
+    - acts like public within package. 
+    - acts like private to all other packages
+  - best practices
+    - all state is private
+    - methods can be mixed -- internal-only, external : think of class as API
+    - use getters and setters to access internal state
+    - package-private -- rarely used
+    - protected -- based on inheritance access needs
+- static
+  - when you need to define a class member as independent from any object instance
+  - ![](assets/2024-10-01-16-59-09.png)
+  - that is why main method is static
+  - makes a class member associate with the class and not instance
+  - `Class.staticVaribleOrMethodName` 
+  - no instance assumptions -- no this, no non-static access, no instance
+  - can be accessed before any instances are created
+  - all instances of class share the same static variable
+- final 
+  - mark things as final -- constants
+  - `final int ash = 39;`
+  - `final Story s = new Story()` -- can't change s but can change s properties -- say `s.reset = True`
+  - affects variable or reference only
+  - object references can be final but doesn't affect instance variables
+  - collections can be final but doesn't affect containing elements
+  - benefit -- runtime optimization; programming best practice
+  - magic values
+    - ```java
+      if(numberOfItems > 12) { ... }  // what does 12 represent? -- Magic value
+
+      final int MAX_ITEMS = 12; 
+
+      if(numberOfItems > MAX_ITEMS) { ... } // no additional documentation is needed. 
+      ```
+- nested classes
+  - static nested classes
+    - ```java
+      class Car{
+        static class Wheel{
+
+        }
+      }
+
+      Car myCar = new Car();
+
+      Car.Wheel someCarWheel = new Car.Wheel();
+      // just an instance; not associated with any car instance. 
+      ```
+  - inner (non - static) class
+    - ```java
+      class Car{
+        class Wheel{
+          
+        }
+      }
+
+      Car myCar = new Car();
+
+      Car.Wheel myCarWheel = myCar.new Wheel(); 
+      // associated with car instance.
+      ```
+
+  - local classes
+    - ```java
+      public static void main(String[] args){
+        class Foo {
+          int x;
+        }
+
+        Foo f = new Foo();
+        f.x = 1;
+      }
+      ```
+    - limited to block scope
+
+  - anonymous inner classes
+    - ```java
+      Car c = new Car() {
+        public boolean isTwoSeater() { // overriding
+          return seats >= 2;
+        }
+      }
+      ```
+    - basically we are creating a new class template but just for this instance. 
+
+- local classes and variable scope
+  - ![](assets/2024-10-01-21-39-02.png)
+  - as long as the variable is not changing within the scope, you can use that in the inner class
+  - ```java
+      public static void main(String[] args){
+      final int i = 39;
+
+      class Foo{
+        int x = i; // works fine because i is final. It is not changing. It has to be final or effectively final. 
+      }
+    }
+    ```
+
+- InterviewQ : Does java support scope Closures? 
+  - Java kinda supports closures with the idea that the thing containing closure happens to be a local class and what its closing over is all the variables that are in scope in the same block as where the local class has been declared.
+- InterviewQ : What needs to happen for an outer variable to be accessible in a lcoal class? 
+  - It has to be final or effectively final (doesn't change within the scope where local class is declared)
+
+## Inheritance and Polymorphism
+
+- Inheritance : allows generic classes to define traits common to a set of related classes
+- ```java
+  class A { // parent class or super class
+
+  }
+
+  class B extends A { // child class or sub class
+
+  }
+
+  class C extends B{ // can only extend one class -- no multiple inheritance
+
+  }
+  ```
+- ![](assets/2024-10-01-21-56-57.png)
+- ![](assets/2024-10-01-21-58-24.png)
+
+- InterviewQ : What does super refer to?
+  - refers to parent class
+
+<br/>
+<br/>
+
+- method overriding
+- ![](assets/2024-10-01-22-00-36.png)
+- ![](assets/2024-10-01-22-03-21.png)
+  - can not change the return type in subclass
+- ![](assets/2024-10-01-22-04-01.png)
+  - you can make it stronger
+  - you can make something more lineant but not more strict
+  - protected -> public 
+- ```java
+  class B extends A{
+
+    @Override
+    public int findName(){
+
+    }
+  }
+  ```
+- ![](assets/2024-10-01-22-07-48.png)
+- ![](assets/2024-10-01-22-09-09.png)
+  - whatever works for parent, works for inherited methods as well.
+  - working state is inherited
+- ![](assets/2024-10-01-22-09-53.png)
+  - once overriden, can't access. this current method rules apply, not parent class methods.
+- ![](assets/2024-10-01-22-12-06.png)
+- ![](assets/2024-10-01-22-12-38.png)
+
+<br/>
+<br/>
+
+- Super's no-arg constructor is automatically called
+- Constructor calls are performed in the order of derivation / extension -- inheritance
+- ![](assets/2024-10-01-22-16-00.png)
+  - since, there is no no-arg constructor in super class, parent class constructor is not called unless you call it explicitly by calling `super(i)`
+  
+- InterviewQ : When do you use super in java?
+  - when a member is inherited but hidden and you want to access parent class member
+  - for calling super/parent class constructor when super constructor requires arguments.
+
+<br/>
+<br/>
+
+- abstract classes
+- abstract class : defining a super class without intending to create instances
+  - ![](assets/2024-10-01-22-19-32.png)
+  - say you don't want anyone to create instance of animal class. 
+- you can not create instances of abstract class
+- abstract can be applied to method -- don't have to provide a body
+- abstract methods indicate method signature without implementation
+- a non-abstract class extending abstract class must implement all abstract members
+- method overriding rules apply -- method signature should be same, no weaker privileges. 
+- ```java
+  abstract class Animal{
+    // Implementaton common to all 
+    
+    abstract public void move(); // can choose to ignore and let the ones inheriting this class implement it
+  }
+
+  Animal ash = new Animal(); // error; Animal is abstract; Cannot be instantiated.
+
+  abstract class Pet extends Animal{
+    // implementaton common to all pets
+
+    // can choose to implement move()
+    // can ignore implmenting move() because this is abstract class too. 
+  }
+
+  class Rabit extends Animal{
+    // additonal implementation or
+    // override what is in Animal
+
+    public void move(){ // since this is not abstract, this must implement move()
+
+    }
+  }
+  ```
+
+<br/>
+<br/>
+
+- final with class : prevents inheritance
+- `final class A { ... }` `class B extends A { ... }` -- throws error
+- `final public void move() { ... }` -- this method can not be overridden in child class
+
+<br/>
+<br/>
+
+- interfaces
+- defines class' interface separate from implementation
+- class can implement multiple interfaces
+- class can only inherit one class
+- ```java
+  public interface Car{
+    public void drive();
+    public void refuel(Fuel f);
+  }
+
+
+  class SportCar implements Car{
+
+    @Override
+    public void drive(){
+
+    }
+
+    @Override
+    public 
+  }
+  ```
+- ![](assets/2024-10-01-22-44-02.png)
+- ![](assets/2024-10-01-22-44-27.png)
+- ![](assets/2024-10-01-22-44-55.png)
+- interfaces
+  - define contract
+  - somebody external to your class would like to know
+  - what's the user needs to use the interface for
+  - define interface of a class
+  - a class can implement multiple interfaces
+  - interfaces can extend other interfaces
+  - interfaces can contain default methods
+  - class implementation overrides default methods
+  - when there are conflicts, class has to have implementation
+  - interfaces can define constants that are available in implementing classes
+  - interfaces can define static methods just like classes
+    - no need to instantiate
+    - can call methods directly on interfaces. `interfaceName.methodName`
+  - interfaces can have private methods. these are called by other methods in the interface (use case: common to default methods)
+- abstract class
+  - template or starting point for classes
+- ![](assets/2024-10-01-22-49-54.png)
+- ![](assets/2024-10-01-22-50-10.png)
+- ![](assets/2024-10-01-22-50-56.png)
+  - you are forced to override because of the conflicting default implementations
+
+
+<br/>
+<br/>
+
+- Polymorphism -- many forms
+  - any sub class can take the form of super class
+  - when a member of the morphed instance is accessed, it is the instance member that is accessed, not the class of the form it is taken
+  - ![](assets/2024-10-01-23-02-47.png)
+    - lion is disguised as animal
+    - all animal things can be done
+    - lion only things can not be done. 
+    - for instance, animal has move, so you can do lion move, but animal doesn't roar, so you can't do lion roar
+    - lion only behaviour can not be accessed. 
+- `SuperClass reference = subClassInstance;` -- can be immediate parent or futher up
+- polymorphism works with interfaces too 
+- ![](assets/2024-10-01-23-08-12.png)
+- ![](assets/2024-10-01-23-10-17.png)
+  - you won't lose all the specificity. 
+  - you can cast to higher compatible type and get the details. 
+
+<br/>
+<br/>
+
+- is-a relationship 
+- two classes have this relationship if one of them can morph into other
+- subclass is-a superclass
+
+<br/>
+<br/>
+
+- Object class : every class extends from this automatically if you are not already extending from any other class
+- ![](assets/2024-10-01-23-20-52.png)
+- ![](assets/2024-10-01-23-21-26.png)
+- ![](assets/2024-10-01-23-21-55.png)
+- ![](assets/2024-10-01-23-23-29.png)
+- ![](assets/2024-10-01-23-27-19.png)
+- equals, toString, getClass()
+
+## Exceptional Handling 
+
+- provides an alternate course of exception when things go wrong
+- it is not to handle compile time errors
+- handle run time errors
+- when something goes wrong, java creates an object of Exception class and throws it
+- protect the code that can throw an exception
+- specify what needs to happen on exception
+- specify what needs to happen no matter what -- clean up code. close connections, free resources
+- throw the exception when something goes wrong
+- ```java
+  try{
+    // Risky code
+  } catch (ExceptionClass1 e1) { // can have multiple catch blocks
+
+  } catch (Exception e) {
+    // Handle exception
+  } finally { // finally is optional
+    // Wrap up or clean up  
+
+    // executes no matter what : success or fail
+  }
+  ```
+- ![](assets/2024-10-01-23-37-49.png)
+- `throw new ArithmeticException("Whatever message")`
+  - immediately jumps to catch block
+- ![](assets/2024-10-01-23-41-35.png)
+  - say second method has its own try catch and it handles exception. 
+  - the calling methods catch block is not executed unless, the second methods catch blocks throws exception
+- uncaught exception -- can lead to end of the program
+  - these are handled by the default handler ( print message to console and end program)
+- exception types
+  - Throwable -- root of all of these objects (exceptions)
+    - super class of all exceptions
+    - has two child classes Exception and Error
+    - Exceptions -- are for alternative ways. if handled properly, program continues to execute
+      - child class RuntimeException -- you are not forced to provide alternative execution or path for every runtime exception that can occur -- out of your control; Unchecked exceptions; You don't have to catch.
+    - Error -- something really bad happened, and you don't want the program to continue execution
+- ![](assets/2024-10-01-23-51-28.png)
+- ![](assets/2024-10-01-23-52-29.png)
+  - need not be surrounded by try catch blocks because it extends from RuntimeException
+- ![](assets/2024-10-01-23-53-19.png)
+- ![](assets/2024-10-01-23-53-34.png)
+- ![](assets/2024-10-01-23-54-10.png)
+- ![](assets/2024-10-01-23-55-34.png)
+- ![](assets/2024-10-01-23-55-47.png)
+- ![](assets/2024-10-01-23-56-45.png)
+
+<br/>
+<br/>
+
+- best practices
+  - do not use generic catch-all exceptions. be as specific as you can
+  - use exception chaining to make handling consistent
+  - pay attention to the exception order in your catch blocks
+  - use checked exceptions whenever you can work around the issue
+- ![](assets/2024-10-02-00-02-38.png)
+  - the `stmt` variable is guaranteed to close whether or not exception occured 
+  - as long as the stmt or the variable has the close method(), this works;
+
+<br/>
+<br/>
+
+- Java Library API 
+- Collections
+- Java Generics -- allow you to work with Collections
+- Java Lambdas -- java 8 and later
+
+<br/>
+<br/>
+
+![](assets/2024-10-02-00-10-49.png)
+
+</details>
+
+-----
+
+
+<details open>
+  <summary> Java Collection Essentials </summary>
+
+<br>
+
+- Java Collections : Language API to manage groups of things
+- Collections API 
+- Individual types of collections
+- When to use what? What's the difference. 
+- Concepts
+  - Coding to interfaces
+  - Iterator pattern
+  - Efficiency discussions
+  - Equality and hash code
+  - Natural ordering and comparisions
+- Collections
+  - Set
+    - HashSet
+    - TreeSet
+  - Lists
+    - ArrayList
+    - LinkedList
+  - Maps
+
+<br/>
+<br/>
+
+- Arrays
+- Arrays, Vector, Hashtable
+- Vector and Hashtable are built with concurrent use in mind
+- Arrays work with primitives and object references
+- array problems
+  - limited data structure
+    - position based access -- array has it
+  - doesn't have many methods on it -- say search, sort
+    - we would have to use Arrays class
+- what you require from collections
+  - position based access
+    - storage and retrieval by index
+    - needs sorting methods
+    - ordered and unordered
+  - uniqueness
+    - are duplicates allowed -- sometimes yes, sometimes no
+    - affects adding behavior -- what happens when you add existing value to collection (say assigning students to classes)
+    - no need for position based access. 
+  - retrieval mechanisms
+    - index based retrieval
+    - key based retrieval -- given a key, give me the value
+    - presence only retrieval
+  - others
+    - mutability
+    - concurrency requirements
+
+<br/>
+<br/>
+
+- what promises the behavior/contract is interface, what actually does the work is implementation
+- Contract is interface; Implementation -- implementation of interface
+- collection types -- define the contract of collection; what it has to offer; promises how it works; promises the behavior implementations -- decides how it actually works behind the scenes
+  - List
+    - ArrayList -- implementation
+    - LinkedList -- implementation
+  - Set
+    - HashSet
+    - LinkedHashSet
+    - TreeSet
+  - Map
+    - HashMap
+    - TreeMap
+  - Queue
+    - PriorityQueue
+
+- ```java
+  int[] numbers = new int[39];
+  Date[] dates = new Date[12]; // actual date objects are created in the heap
+
+  String[] names = new String[12];
+
+  Arrays.fill(names, "Ash by default ")
+
+  for(int i=0; i< names.length; i++) names[i] = names[i] + 1
+
+  Arrays.binarySearch(names, "Ash by default 39") 
+  ```
+
+
+<br/>
+<br/>
+
+
+- ArrayList -- replacement for arrays
+- Collections Interface <--extends-- List Interface <--implements-- ArrayList
+
+```java
+ArrayList<String> names = new ArrayList<>() // don't need to specify size.
+
+names.add("ash")
+
+names.get(0) // index based retrieval
+
+names.indexOf("ash") // first index where element exists
+
+// we also have last index of 
+
+
+```
 </details>
 
 -----
