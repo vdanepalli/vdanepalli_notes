@@ -319,9 +319,72 @@
 - ![Relationship Cardinality](assets/2024-09-26-13-50-21.png)
 - ![Ex: One to One Cardinality](assets/2024-09-26-13-50-54.png)
 - ![Ex: Many to Many Cardinality](assets/2024-09-26-13-51-16.png)
-- 
+- ![Connecting multiple fact tables](assets/2024-09-26-14-31-54.png)
+- ![Filter Context and Flow](assets/2024-09-26-14-35-32.png)
+- ![Ex: Filter Flow](assets/2024-09-26-14-35-52.png)
+- ![Bi-directional filters](assets/2024-09-26-14-42-54.png)
+- ![Ex: Bi-directional filters](assets/2024-09-26-14-43-14.png)
+- ![Ex: Bi-directional filters 1](assets/2024-09-26-14-43-36.png)
+- ![Ambiguity](assets/2024-09-26-14-43-56.png)
+- ![Hiding Fields](assets/2024-09-26-14-46-43.png)
+- ![Filter Flow](assets/2024-09-26-14-51-17.png)
+- ![Model Layouts](assets/2024-09-26-14-54-45.png)
+- data types (how data is stored) -- data formats (how data is displayed)
+- ![Data Formats and Categories](assets/2024-09-26-15-00-01.png)
+- ![Hierarchies](assets/2024-09-26-15-16-48.png)
+- ![Data Model Best Practices](assets/2024-09-26-15-16-10.png)
+
+
+<br/><br/>
+
+
+- Database normalization has multiple benefits, including query efficiency, mitigation of risk due to human error, and simplified structure for querying and analysis.
+- Foreign keys are often found in Data (or "Fact") tables, and are used to join additional information from related lookup (or "Dimension") tables. For example, a data table containing transaction records might contain foreign keys to capture a product ID, customer ID, store ID, transaction date, etc, each of which exist as primary keys within related lookup tables in the model.
+- A star schema can be described as a central data table surrounded by individual lookup or dimension tables. 
+- Snowflake schemas contain chains of hierarchical lookup tables.
+- While you can edit existing relationships and create multiple active or inactive relationships within a model, you CANNOT create multiple active relationships from one table to the same primary key. You can create those relationships, but only one can be active at a time to prevent relationship ambiguity.
+- Since data tables typically contain unique index values and repeating foreign keys, there usually isn't a single matching field that can be used to relate them directly. If you try to relate two fact tables using foreign keys from each table (i.e. Product ID), you are likely to encounter a many-to-many relationship warning
+- With few exceptions, tables within a Power BI Desktop data model should be related via one-to-many relationships, between primary and foreign keys.
+- In many cases, data (or "fact") tables cannot be directly related to one another in a meaningful way. In order to analyze data across multiple fact tables, you can relate them through shared lookup/dimension tables and filter them simultaneously using the primary keys contained within those tables.
+- Organizing your data model with lookup tables at the top can serve as a helpful reminder that filter context from those tables flows "downstream" to your data/fact tables. Rearranging the tables in your model has no impact on the ability to create or manage relationships, and has nothing to do with the number of fields or records the tables contain.
+- Relationship ambiguity is most commonly caused when multiple two-way filters allow conflicting filter context to pass to the same data table (this issue typically has nothing to do with 1-way filters, inactive relationships or multiple fact tables).
+- The "Hide in Report View" option allows you to determine exactly which fields report users can and cannot access. This can be particularly helpful in preventing users from filtering using invalid fields (such as the foreign key in a data table rather than the primary key in a related lookup table).
+- A valid hierarchy is a collection of related fields, with each field representing a subset of the previous. For example, Country > City > State is NOT a valid hierarchy because states are not subsets of cities, but Product Category > Product Brand > Product is valid because each product category can contain multiple brands, and each brand can contain multiple products.
+
 
 ## Measures with DAX
+
+- ![Calculated Fields With DAX](assets/2024-09-26-15-18-36.png)
+- ![Meet Dax](assets/2024-09-26-15-20-08.png)
+- ![M vs DAX](assets/2024-09-26-15-21-38.png)
+- Calculateed columns understands row context but do not understand filter context
+- Measures are evaluated based on the filter context
+- ![Calculated Columns](assets/2024-09-26-15-30-14.png)
+- ![Ex: Calculated Columns](assets/2024-09-26-15-30-30.png)
+- ![DAX Measures](assets/2024-09-26-15-30-48.png)
+- ![Implicit vs Explicit Measures](assets/2024-09-26-15-40-20.png)
+- ![Quick Measures](assets/2024-09-26-15-40-46.png)
+- ![Calculated vs Measures](assets/2024-09-26-15-41-03.png)
+- ![Measure Tables](assets/2024-09-26-15-41-32.png)
+  - Once you create a measure table throgh enter data, add a measure, and delete the column, then you will see something called Display Folder, and you can use this to organize measures
+- ![Filter Context](assets/2024-09-26-15-50-08.png)
+- ![Ex: Filter Context](assets/2024-09-26-15-50-27.png)
+- ![Step by Step Measure Calculation](assets/2024-09-26-15-52-13.png)
+- naked column reference -- `Transactions[quantity]`
+- ![DAX Syntax](assets/2024-09-26-15-59-41.png)
+- ![DAX Operators](assets/2024-09-26-15-59-57.png)
+- ![Common Function Categories](assets/2024-09-26-16-00-17.png)
+- ![Basic Math and Stats Functions](assets/2024-09-26-16-00-38.png)
+- ![Counting Functions](assets/2024-09-26-16-06-09.png)
+- ![Sol: Math and Stats](assets/2024-09-26-16-16-55.png)
+- ![Basic Logical Functions](assets/2024-09-27-14-30-44.png)
+- ![SWITCH](assets/2024-09-27-14-31-06.png)
+- ![Sol: Logical Functions](assets/2024-09-27-14-31-30.png)
+- ![Text Functions](assets/2024-09-27-14-32-01.png)
+- ![Sol: Text](assets/2024-09-27-16-47-05.png)
+- ![Basic Date and Time Functions](assets/2024-09-27-16-47-27.png)
+- Related can be thought of as VLOOKUP. It works on the many side of the relationship. So you say, pull row details from lookup table (has primary key) -- say pulling product price
+- 
 
 ## Visualize
 
