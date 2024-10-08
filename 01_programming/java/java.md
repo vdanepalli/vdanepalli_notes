@@ -1,5 +1,11 @@
 # Java : Tutorials Point 
 
+
+<details open>
+  <summary> Java Tutorials Point </summary>
+
+<br>
+
 - June 1991 -->GreenTalk(.gt) --> Oak language --> Green --> Java ( Island in Indonesia, java coffee - unique, dynamic, revolutionary, fun)
 - Java - high-level, object-oriented programming language. Developed by Sun Microsystems - James Gosling, released in 1995. Now, owned by Oracle.
 - general purpose programming language; WORA - Write Once, Run Anywhere -- Once compiled, can run on any platform.
@@ -204,15 +210,65 @@
     }
     ```
 
+</details>
+
+-----
 
 
 # Java Brains
 
+## TOC 
+
+- Java Essentials
+- Java Collection Essentials
+
+<br/>
+<br/>
+
+
+- Modern Spring from Scratch
+- Relational Databases and SQL
+- Databases and Data Stores for Backend Engineers
+- Core Java Project Work
+- Maven Quick Guide
+- Functional Java
+- Java Collections In Depth
+- Core Java Quick Dive
+- Java Backend - The Big Picture
+- Mastering the Twelve Factor App
+- Tinder AI Worksheet
+- Cloud Basics
+- HTML for Absolute Beginners
+- Reactive Programming with Java
+- Docker Essentials
+- Terraform Essentials
+- Cassandra Essentials
+- JPA and Hibernate Essentials
+- Building an IPL Dashboard
+- Java Concurrency
+- Git Basics
+- Java Interview Prep Level 1
+- Java Generics In Depth
+- Maven Essentials
+- Building a resume portal application
+- Building a word search game
+- JShell Basics
+- JUnit Basics
+- Spring Boot Microservices - Microservice configuration
+- Spring Boot Microservices - Fault Tolerance and Resilience
+- Spring Boot Microservices - Service Discovery and Communication
+- TypeScript Basics
+- Spring Boot Quick Start
+- Java Lambda Basics
+
+## Java Essentials
 
 <details open>
   <summary> Java - Essentials </summary>
 
 <br>
+
+### Introduction
 
 - Java language
   - sun micro systems -- 1990-95
@@ -271,7 +327,7 @@
 <br/>
 <br/>
 
-## variables and types 
+### Variables and types 
 
 - ```java
   public class HelloWorld {
@@ -365,7 +421,7 @@
 <br/>
 <br/>
 
-## control flow syntax structures
+### Control flow syntax structures
 
 - if () ... else if () .... else ... 
 - switch (a) { case 0: ... break; case 12: ... break; default: ...}
@@ -396,7 +452,7 @@
 - continue --  ends the iteration of the loop; continues the loop
 
 
-## classes and objects
+### Classes and objects
   
 - Class : models things in real or business world
   - define state and behavior
@@ -471,7 +527,7 @@ Car myNewCar = new Car();
 - if the argument is a reference, the reference is copied. 
 - the reference still points to the same instance as the source object reference
 
-## Access and Encapsulation
+### Access and Encapsulation
 
 - classes are essentially unique within a package. 
 - package can have multiple classes
@@ -593,7 +649,7 @@ Car myNewCar = new Car();
 - InterviewQ : What needs to happen for an outer variable to be accessible in a lcoal class? 
   - It has to be final or effectively final (doesn't change within the scope where local class is declared)
 
-## Inheritance and Polymorphism
+### Inheritance and Polymorphism
 
 - Inheritance : allows generic classes to define traits common to a set of related classes
 - ```java
@@ -789,7 +845,7 @@ Car myNewCar = new Car();
 - ![](assets/2024-10-01-23-27-19.png)
 - equals, toString, getClass()
 
-## Exceptional Handling 
+### Exceptional Handling 
 
 - provides an alternate course of exception when things go wrong
 - it is not to handle compile time errors
@@ -866,11 +922,14 @@ Car myNewCar = new Car();
 
 -----
 
+## Java Collection Essentials
 
 <details open>
   <summary> Java Collection Essentials </summary>
 
 <br>
+
+### Introduction
 
 - Java Collections : Language API to manage groups of things
 - Collections API 
@@ -970,9 +1029,510 @@ names.get(0) // index based retrieval
 names.indexOf("ash") // first index where element exists
 
 // we also have last index of 
-
-
 ```
+
+<br/>
+<br/>
+
+### Performance and the big o notation
+
+- Tradeoffs
+- Feature Requirements
+- Efficiency
+  - Time
+    - Storage time 
+    - Retrieval time -- single item, search
+    - how 
+      - bigger collection - longer time
+      - a factor of N (number of items)
+      - O(N)
+  - Space -- usually proportional to the size to be stored
+
+<br/>
+<br/>
+
+- Big O
+- how good / bad is the dependency on N
+- Rough imprecise measurement / classification
+- How much the time depends on collection size?
+- Broad buckets
+- worst case estimate
+
+<br/>
+<br/>
+
+- O(N) Linear time -- proportional to the size N
+- O(1) Constant time -- independent of size N
+- O(log N) Logarithmic time -- divide search space by 2 at every step
+- O(N ^ 2) Quadratic time -- pick one -- compare with every one (and repeat whole thing for all of them)
+
+<br/>
+<br/>
+
+- Inherent performance characteristics
+  - Searching a list -- O(N)
+- Implementation-based characteristics
+  - Looking up by index -- (say in ArrayList, LinkedList)
+ 
+### Iteration concepts
+
+- iterator pattern -- how iteration works (objective is to iterate over collection)
+- ![](assets/2024-10-04-15-42-15.png)
+- ![](assets/2024-10-04-15-43-06.png)
+```java
+ArrayList<String> names = new ArrayList<>();
+for(int i = 0; i<20; i++){
+  names.add("name : " + i);
+}
+
+for(int i = 0; i < 20; i++) {
+  System.out.println(names.get(i));
+} 
+
+Iterator<String> iterator = names.iterator();
+
+while(iterator.hasNext()){
+  System.out.println(iterator.next())
+}
+```
+- iterator gives a reference to element
+- each iterator has a reference to where it's looking at 
+- iterators sometimes don't like modifications to underlying collection
+  - say the collections supports modifications
+  - you didn't modify the collection using current iterator, but some other code did
+  - iterator detects the change and throws error -- Concurrent Modification Exception
+- for each loop 
+  ```java
+  for (Type element : Iterable) { ... }
+  ```
+
+- Iterable
+  - a interface
+  - implementing this interface allows  an object to be the target of enhanced for statement (for each loop)
+
+### Object equality, hash code, and comparison
+
+- Equality
+- == (works with primitives -- `39==39` `false == false`) for objects -- compares reference variables (addresses)
+- for objects -- only you know what equivalence means for two different objects to be equal
+  - do we compare references
+  - do we compare member elements in the referenced obejcts
+  - equals() -- this is where you specify what you know -- defaults to ==
+    - you have the ability to define equality (control over fields that decide equality)
+```java
+package winai.ash.equals;
+
+public class Student{
+  private String firstName;
+  private String lastName;
+  private int id;
+  private String department;
+
+  public Student(String firstName, String lastName, int id, String department){
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.id = id;
+    this.department = department;
+  }
+
+  @override 
+  public boolean equals(Object o){
+    if (this == o) return true;
+    if (!(o instanceof Student)) return false;
+
+    Student student = (Student) o;
+
+    if(id != student.id) return false;
+    if(firstName != null ? !firstName.equals(student.firstName) : student.firstName != null) return false;
+  }
+}
+```
+
+#### Hashing and Hash Codes
+
+- Hashing : taking an object and reducing into one value
+- object -> hash function -> hash code 
+  - one way 
+  - must return same hash code each time 
+- hashCode()
+  - a method on object or class
+  - `public int hashCode();` 
+  - when you have two objects for which equals() returns true, they must have the same hash code
+- so if you implement equals() method for custom equality check, you need to implement hashCode() to return same hash code
+
+#### Comparison
+
+- affects ordering
+- obj a > obj b
+  - there's some state in obj a and obj b
+  - there's a clear definition of comparision of those values
+  - individual values or combination of values
+- not all objects are comparable 
+  - ex: two database connection instances 
+  - that is why there is no default comparison implementation
+- when you have comparable objects
+  - you implement Comparable Interface
+  - ```java
+      public interface Comparable<T>{
+        public int compareTo(T o);
+      }
+    ```
+  - argument object is 
+    - NEGATIVE VALUE : greater than this object, 
+    - POSITIVE VALUE : less than this object, 
+    - ZERO : they both are same (criteria used for comparing but not equality) -- 3 possible return values
+- ![](assets/2024-10-04-16-50-25.png)
+- ![](assets/2024-10-04-16-50-40.png)
+- ![](assets/2024-10-04-16-52-47.png)
+  - sorts in 1, 2, 3.
+  - natural order
+
+<br/>
+<br/>
+
+- sometimes order depends on the context
+  - say by grade for ranking
+  - by height for physical training
+  - by name for attendance
+- but only one compareTo method
+- if you want multiple ways to sort, you use Custom comparators 
+- third party comparator -- takes two objects of a type
+```java
+public interface Comparator<T>{
+  int compare(T o1, T o2);
+}  
+
+public class StudentLastNameComparator extends Comparator<Student>{
+
+  @override
+  public int compare(Student o1, Student o2){
+    return o1.getLastName().compareTo(o2.getLastName());
+  }
+}
+``` 
+- ![](assets/2024-10-04-16-59-10.png)
+- sort method -- takes instance of this comparator class as argument
+- `students.sort(new StudentGradeComparator());`
+- ![](assets/2024-10-04-17-03-30.png)
+  - where we used to pass null earlier, now we pass the comparator object. 
+  - if this is null, then the sort uses compareTo to sort.
+
+
+### The collections interface
+
+- root interface of the collection hierarchy
+- no direct implementation in the JDK
+- subinterfaces for collection types -- Set, List, ...
+- map doesn't extend from collection interface but everything else does
+- not to be confused with Collections class
+- lowest common denominator -- to support all collections (say list has index based accessing, set doesn't but both have add method)
+  - generic methods that all collections implement
+- Collection interface is sub interface of Iterable -- any collection an be iterated over
+- Certain interface methods could be optional
+  - If a collection implementation doesn't implement a particular method, it must define corresponding methods to throw UnSupportedOperationException
+
+<br/>
+<br/>
+
+- Methods
+  - add, addAll
+  - remove, removeAll, clear, retainAll
+  - isEmpty, size
+  - iterator, stream, toArray
+
+### Lists
+
+- ordered collection of elements, aka sequence
+- allow duplicates
+- add
+  - `boolean add(E e)`
+  - `boolean addAll(Collection<? extends E> c)`
+  - `void add(int index, E element)`
+  - `boolean addAll(int index, Collection<? extends E> c)`
+- remove
+  - ![](assets/2024-10-07-14-45-16.png)
+- replace
+  - ![](assets/2024-10-07-14-46-09.png)
+- inspect
+  - ![](assets/2024-10-07-14-47-14.png)
+- retrieve
+  - ![](assets/2024-10-07-14-57-39.png)
+- processing
+  - ![](assets/2024-10-07-14-59-49.png)
+  - list has it's own iterator
+- sort
+  - `default void sort(Comparator<? super E> c)`
+  - say, if you pass null here, it sorts by natural order
+  - natural order is compareTo implementation of the object
+
+<br/>
+<br/>
+
+#### List
+
+```java
+List<String> names = new ArrayList<>();
+names.add("ash")
+names.add("winai")
+SOP(names) // insertion order
+
+names.set(1, "vinnu")
+
+names.get(0)
+
+names.get(39) // Exception IndexOutOfBoundsException
+
+names.add(1, "vinay")
+
+names.remove(1)
+
+names.remove("vinay")
+```
+
+
+#### Array Lists
+
+- get O(1)
+- set O(1)
+- contains O(n)
+- remove(0) O(n)
+- add(0) O(n)
+- add -- O(1) amortized time -- net time -- average
+  - best case - O(1)
+  - worst case - O(n)
+  - most cases - O(1)
+  - finite amount of space; what if it overflows
+  - doubles space when it runs out
+
+#### Liked Lists
+
+- get O(n)
+- set O(n)
+- contains O(n)
+- remove(0) O(1)
+- add(0) O(1)
+- add/remove -- after get O(n) it is O(1)
+
+<br/>
+<br/>
+
+- use
+  - position matters
+  - duplicates don't matter
+  - iteration use cases
+- ArrayList
+  - position based access
+- LinkedList
+  - constant and random insertions and removals
+
+### Sets
+
+- collection with no duplicate elements
+- usecase: classification of items
+- contain no pair of elements e1 and e2 such that e1.equals(e2) is true
+- set can contain utmost one null element -- second null breaks equality contract
+
+```java
+Set<String> names = new HashSet<>();
+
+
+names.add('Ash');
+names.add('Winai');
+
+boolean result = names.add('Ash'); // no impact or no change
+SOP(result) // false because underlying set is not modified
+
+names.remove('Winai'); 
+
+names.contains('Ash'); // true 
+```
+
+
+#### HashSet
+
+- the alphabetical file drawer -- implemented by hash table
+- hash1, hash2, hash3, ... -> drawers 
+- hash collisons -- drawer is a list
+- hash bucket structure 
+  - contiguous
+  - linkedlist -- used by java implementation of HashSet
+
+<br/>
+<br/>
+
+- add O(1)
+- remove O(1) -- can say O(h) where h is number of hash collisons of that particular hashcode bucket
+- contains O(1)
+
+<br/>
+<br/>
+
+- HashSet Initial Capacity
+  - Array of size 16 by default
+- Hash load factor
+  - number of elements / number of buckets; 
+  - default max load factor is 0.75 (12 / 16)
+- Rehashing
+  - when hash load is too high, double the capacity
+
+
+#### LinkedHashSet
+
+- makes hashset ordered
+  - ![](assets/2024-10-07-16-07-32.png)
+  - maintains pointes for each element 
+- advantages
+  - insertion order
+  - ordered iteration O(1)
+- add O(1)
+- contains O(1)
+- next O(1)
+
+
+#### TreeSet
+
+- each of these implementations have a unique way to make the contains check efficient
+- essentially a binary search tree -- at most two children
+- ![](assets/2024-10-07-16-16-36.png)
+  - removal
+    - largest from left subtree 
+    - smallest from right subtree
+- TreeSet requirement
+  - must be comparable; object must have implemented the Comparable Interface
+  - compareTo and equals must be consistent  -- unique to TreeSet
+
+<br/>
+<br/>
+
+- add O(log n)
+- contains O(log n)
+- iteration O(log n)
+- balance O(log n)
+
+<br/>
+<br/>
+
+- imbalanced trees
+  - balance : very scattered. left and right
+
+- when to use
+  - set
+    - position isn't important
+    - fast lookup
+    - fast contains check
+    - no duplicates
+  - HashSet
+    - order isn't important
+    - sorting isn't important
+    - good hashing strategy
+    - predictable load factor
+  - TreeSet
+
+### Maps
+
+- map is a dictionary structure
+- you have a key and you wannt retrieve a value
+- doesn't implement Collections Interface
+- map can not contain duplicate keys
+- each key can map to atmost one value
+- for all other collections you add a single element, but for map you add a key and a value: hence map can not implement Collections
+
+
+```java
+Map<Integer, Student> students = new HashMap<>();
+
+students.put(student1.getId(), student1);
+students.put(student2.getId(), student2);
+students.put(student3.getId(), student3);
+
+students.get(1)
+
+students.put(39, null) // this won't tell you if the key was not available or if the value for the key is null
+
+students.get(39) // null
+students.get(12) // null
+
+for (Integer key : students.keySet()) {
+  System.out.println(key);
+}
+
+for (Student student : students.values()) {
+  System.out.println(student);
+}
+
+for (Map.Entry<Integer, Student> entry: students.entrySet()) {
+  System.out.println(entry.getKey() + ' -> ' + entry.getValue());
+}
+
+
+students.getOrDefault(key, default_obj_or_value);
+students.putIfAbsent(key, new Student());
+
+students.forEach((key, value) -> System.out.println(value));
+
+students.computeIfAbsent(key, key -> new Student("Ash", key)); // if key is absent, store result of lambda expression
+```
+
+
+#### HashMap
+
+- get O(1)
+- containsKey O(1) -- hashcode comparison
+- put O(1)
+
+### Wrap Up
+
+- Collections Class -- allows you to work on all collections
+- Array Class -- allows you to work on all arrays -- has many overloading methods -- one for each Integer, Character, ...
+- Collection Interface is different from Collections utility class
+- consists of static methods
+
+<br/>
+<br/>
+
+- ordered inordered
+- duplicates no duplicates
+- Equals
+- HashCode
+- Iterator
+- CompareTo
+- Comparator
+- Comparable
+- Collection Interface
+- Collections Class
+- List
+- ArrayList
+- LinkedList
+- Set
+- HashSet
+- LinkedHashSet
+- TreeSet
+- Queue
+- DeQueue
+- 
 </details>
 
 -----
+
+
+## _
+
+
+<details open>
+  <summary> _ </summary>
+
+<br>
+
+
+</details>
+
+-----
+
+# 
+
+
+
+
+
+
+
