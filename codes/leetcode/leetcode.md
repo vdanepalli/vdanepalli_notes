@@ -1,4 +1,12 @@
 
+# Leetcode 
+
+
+<details open>
+    <summary> Other </summary>
+
+<br>
+
 ### 151. [Reverse Words in a String](https://leetcode.com/problems/reverse-words-in-a-string) | Solved | Medium
 
 Given an input string s, reverse the order of the words.
@@ -2254,8 +2262,524 @@ def rob(self, nums: List[int]) -> int:
 
 ------- 
 
-###
+</details>
 
-###
+-----
 
-###
+## Leetcode 75
+
+
+<details open>
+    <summary> Leetcode 75 </summary>
+
+<br>
+
+### 0 : TOC
+
+- Array / String 
+- Two Pointers
+- Sliding Window
+- Prefix Sum
+- Heat Map / Set
+- Stack
+- Queue
+- Linked List
+- Binary Tree - BFS
+- Binary Tree - DFS
+- Binary Search Tree
+- Graphs - BFS
+- Graphs - DFS
+- Heap / Priority Queue
+- Binary Search
+- Backtracking
+- DP - 1D
+- DP - Multidimensional
+- Bit Manipulation
+- Trie
+- Intervals
+- Monotonic Stack
+
+### 1 : 1768. Merge Strings Alternately : easy
+
+    You are given two strings word1 and word2. Merge the strings by adding letters in alternating order, starting with word1. If a string is longer than the other, append the additional letters onto the end of the merged string.
+
+    Return the merged string.
+
+ 
+
+    Example 1:
+
+    Input: word1 = "abc", word2 = "pqr"
+    Output: "apbqcr"
+    Explanation: The merged string will be merged as so:
+    word1:  a   b   c
+    word2:    p   q   r
+    merged: a p b q c r
+    Example 2:
+
+    Input: word1 = "ab", word2 = "pqrs"
+    Output: "apbqrs"
+    Explanation: Notice that as word2 is longer, "rs" is appended to the end.
+    word1:  a   b 
+    word2:    p   q   r   s
+    merged: a p b q   r   s
+    Example 3:
+
+    Input: word1 = "abcd", word2 = "pq"
+    Output: "apbqcd"
+    Explanation: Notice that as word1 is longer, "cd" is appended to the end.
+    word1:  a   b   c   d
+    word2:    p   q 
+    merged: a p b q c   d
+ 
+
+    Constraints:
+
+    1 <= word1.length, word2.length <= 100
+    word1 and word2 consist of lowercase English letters.
+
+#### Approach 1: Two Pointers O(m + n)
+
+```cpp
+class Solution {
+public:
+    string mergeAlternately(string word1, string word2) {
+        int m = word1.size();
+        int n = word2.size();
+        string result = "";
+        int i = 0, j = 0;
+
+        while (i < m || j < n) {
+            if (i < m) {
+                result.push_back(word1[i++]);
+            }
+            if (j < n) {
+                result.push_back(word2[j++]);
+            }
+        }
+
+        return result;
+    }
+};
+```
+
+```java
+class Solution {
+    public String mergeAlternately(String word1, String word2) {
+        int m = word1.length();
+        int n = word2.length();
+        StringBuilder result = new StringBuilder();
+        int i = 0, j = 0;
+
+        while (i < m || j < n) {
+            if (i < m) {
+                result.append(word1.charAt(i++));
+            }
+            if (j < n) {
+                result.append(word2.charAt(j++));
+            }
+        }
+
+        return result.toString();
+    }
+}
+```
+
+```python
+class Solution(object):
+def mergeAlternately(self, word1, word2):
+    m = len(word1)
+    n = len(word2)
+    i = 0
+    j = 0
+    result = []
+
+    while i < m or j < n:
+        if i < m:
+            result += word1[i]
+            i += 1
+        if j < n:
+            result += word2[j]
+            j += 1
+
+    return "".join(result)
+```
+
+#### Approach 2: One Pointer O(m + n)
+
+```cpp
+class Solution {
+public:
+    string mergeAlternately(string word1, string word2) {
+        int m = word1.size();
+        int n = word2.size();
+        string result = "";
+
+        for (int i = 0; i < max(m, n); i++) {
+            if (i < m) {
+                result.push_back(word1[i]);
+            }
+            if (i < n) {
+                result.push_back(word2[i]);
+            }
+        }
+
+        return result;
+    }
+};
+```
+
+```java
+class Solution {
+    public String mergeAlternately(String word1, String word2) {
+        int m = word1.length();
+        int n = word2.length();
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < Math.max(m, n); i++) {
+            if (i < m) {
+                result.append(word1.charAt(i));
+            }
+            if (i < n) {
+                result.append(word2.charAt(i));
+            }
+        }
+
+        return result.toString();
+    }
+}
+```
+
+```python
+class Solution(object):
+def mergeAlternately(self, word1, word2):
+    result = []
+    n = max(len(word1), len(word2))
+    for i in range(n):
+        if i < len(word1):
+            result += word1[i]
+        if i < len(word2):
+            result += word2[i]
+
+    return "".join(result)
+```
+
+### 2 : 1071. Greatest Common Divisor of Strings : easy
+
+    For two strings s and t, we say "t divides s" if and only if s = t + t + t + ... + t + t (i.e., t is concatenated with itself one or more times).
+
+    Given two strings str1 and str2, return the largest string x such that x divides both str1 and str2.
+
+ 
+
+    Example 1:
+
+    Input: str1 = "ABCABC", str2 = "ABC"
+    Output: "ABC"
+    Example 2:
+
+    Input: str1 = "ABABAB", str2 = "ABAB"
+    Output: "AB"
+    Example 3:
+
+    Input: str1 = "LEET", str2 = "CODE"
+    Output: ""
+ 
+
+    Constraints:
+
+    1 <= str1.length, str2.length <= 1000
+    str1 and str2 consist of English uppercase letters.
+
+#### Approach 1: Brute force O(min(m,n)⋅(m+n)) T O(min(m, n)) S
+
+```cpp
+class Solution {
+public:
+    bool valid(string str1, string str2, int k) {
+        int len1 = str1.size(), len2 = str2.size();
+        if (len1 % k > 0 || len2 % k > 0) {
+            return false;
+        } else {
+            string base = str1.substr(0, k);
+            int n1 = len1 / k, n2 = len2 / k;
+            return str1 == joinWords(base, n1) && str2 == joinWords(base, n2);
+        }
+    }
+    string joinWords(string str, int k) {
+        string ans = "";
+        for (int i = 0; i < k; ++i) {
+            ans += str;
+        }
+        return ans;
+    }
+    
+    
+    string gcdOfStrings(string str1, string str2) {
+        int len1 = str1.length(), len2 = str2.length();
+        for (int i = min(len1, len2); i >= 1; --i) {
+            if (valid(str1, str2, i)) {
+                return str1.substr(0, i);
+            }
+        }
+        return "";
+    }
+};
+```
+
+```java
+class Solution {
+    public boolean valid(String str1, String str2, int k) {
+        int len1 = str1.length(), len2 = str2.length();
+        if (len1 % k > 0 || len2 % k > 0) {
+            return false;
+        } else {
+            String base = str1.substring(0, k);
+            return str1.replace(base, "").isEmpty() && str2.replace(base, "").isEmpty();
+        }
+    }
+    
+    
+    public String gcdOfStrings(String str1, String str2) {
+        int len1 = str1.length(), len2 = str2.length();
+        for (int i = Math.min(len1, len2); i >= 1; --i) {
+            if (valid(str1, str2, i)) {
+                return str1.substring(0, i);
+            }
+        }
+        return "";
+    }
+}
+```
+
+```python
+
+class Solution:
+    def gcdOfStrings(self, str1: str, str2: str) -> str:
+        len1, len2 = len(str1), len(str2)
+        
+        def valid(k):
+            if len1 % k or len2 % k: 
+                return False
+            n1, n2 = len1 // k, len2 // k
+            base = str1[:k]
+            return str1 == n1 * base and str2 == n2 * base 
+        
+        for i in range(min(len1, len2), 0, -1):
+            if valid(i):
+                return str1[:i]
+        return ""
+```
+
+#### Approach 2: Greatest Common Divisor O(m+n) Time and
+
+```cpp
+class Solution {
+public:
+    string gcdOfStrings(string str1, string str2) {
+        // Check if they have non-zero GCD string.
+        if (str1 + str2 != str2 + str1) {
+            return "";
+        }
+
+        // Get the GCD of the two lengths.
+        int gcdLength = gcd(str1.size(), str2.size());
+        return str1.substr(0, gcdLength);
+    }
+};
+```
+
+```java
+class Solution {
+    public int gcd(int x, int y) {
+        if (y == 0) {
+            return x;
+        } else {
+            return gcd(y, x % y);
+        }    
+    }
+    
+    public String gcdOfStrings(String str1, String str2) {
+        // Check if they have non-zero GCD string.
+        if (!(str1 + str2).equals(str2 + str1)) {
+            return "";
+        }
+        
+        // Get the GCD of the two lengths.
+        int gcdLength = gcd(str1.length(), str2.length());
+        return str1.substring(0, gcdLength);
+    }
+}
+```
+
+```python
+class Solution:
+    def gcdOfStrings(self, str1: str, str2: str) -> str:
+        # Check if they have non-zero GCD string.
+        if str1 + str2 != str2 + str1:
+            return ""
+
+        # Get the GCD of the two lengths.
+        max_length = gcd(len(str1), len(str2))
+        return str1[:max_length]
+```
+
+
+
+### : 11. Container With Most Water : medium
+
+    You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+
+    Find two lines that together with the x-axis form a container, such that the container contains the most water.
+
+    Return the maximum amount of water a container can store.
+
+    Notice that you may not slant the container.
+
+ 
+
+    Example 1:
+
+
+    Input: height = [1,8,6,2,5,4,8,3,7]
+    Output: 49
+    Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
+    Example 2:
+
+    Input: height = [1,1]
+    Output: 1
+ 
+
+    Constraints:
+
+    n == height.length
+    2 <= n <= 105
+    0 <= height[i] <= 104
+
+#### Approach 1: Brute Force O(n^2) Time and O(1) Space
+
+```cpp
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int maxarea = 0;
+        for (int left = 0; left < height.size(); left++) {
+            for (int right = left + 1; right < height.size(); right++) {
+                int width = right - left;
+                maxarea = max(maxarea, min(height[left], height[right]) * width);
+            }
+        }
+        return maxarea;
+    }
+};
+```
+
+```java
+public class Solution {
+    public int maxArea(int[] height) {
+        int maxarea = 0;
+        for (int left = 0; left < height.length; left++) {
+            for (int right = left + 1; right < height.length; right++) {
+                int width = right - left;
+                maxarea = Math.max(
+                    maxarea,
+                    Math.min(height[left], height[right]) * width
+                );
+            }
+        }
+        return maxarea;
+    }
+}
+```
+
+```python
+class Solution:
+def maxArea(self, height: List[int]) -> int:
+    maxarea = 0
+    for left in range(len(height)):
+        for right in range(left + 1, len(height)):
+            width = right - left
+            maxarea = max(maxarea, min(height[left], height[right]) * width)
+
+    return maxarea
+```
+
+#### Approach 2: Two Pointer Approach O(n) Time and O(1) Space
+
+```cpp
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int maxArea = 0;
+        int left = 0;
+        int right = height.size() - 1;
+
+        while (left < right) {
+            int width = right - left;
+            maxArea = max(maxArea, min(height[left], height[right]) * width);
+            if (height[left] <= height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        return maxArea;
+    }
+};
+```
+
+```java
+public class Solution {
+    public int maxArea(int[] height) {
+        int maxarea = 0;
+        int left = 0;
+        int right = height.length - 1;
+        while (left < right) {
+            int width = right - left;
+            maxarea = Math.max(
+                maxarea,
+                Math.min(height[left], height[right]) * width
+            );
+            if (height[left] <= height[right]) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        return maxarea;
+    }
+}
+```
+
+```python
+class Solution:
+def maxArea(self, height: List[int]) -> int:
+    maxarea = 0
+    left = 0
+    right = len(height) - 1
+
+    while left < right:
+        width = right - left
+        maxarea = max(maxarea, min(height[left], height[right]) * width)
+        if height[left] <= height[right]:
+            left += 1
+        else:
+            right -= 1
+
+    return maxarea
+```
+
+
+
+
+
+
+
+
+
+
+
+
+</details>
+
+-----

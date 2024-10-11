@@ -1515,6 +1515,245 @@ students.computeIfAbsent(key, key -> new Student("Ash", key)); // if key is abse
 -----
 
 
+## Java Collections In Depth
+
+
+<details open>
+  <summary> Java Collections In Depth </summary>
+
+<br>
+
+### Understanding Equality and Hashing
+
+#### Collections Overview
+
+- storing and retrieving objects
+- provides a consistent standard
+- implemented in `java.util package`
+- types
+  - List -- sequential, index based, ordered
+  - Set -- unique, no order, belongs to or not
+  - Map -- key value pair,
+- Collections is a Framework, not a Library
+  - guideliness, tool kit for creating your own collections
+  - more than a library
+- Benefits
+  - High performance implementations
+  - Optimized
+  - Improves code reusability and maintainability
+  - good preset data structures
+  - common vocabulary 
+- data structures
+  - not all collections are same
+  - different needs for 
+    - storage and retrieval
+    - sorting 
+    - efficiency
+- what it offers
+  - Core Interfaces (List, Map, Set, ...)
+  - Specific Implementations (ArrayList, HashMap, TreeSet, ...)
+  - Abstract Implementations (AbstractList, ...)
+    - for you to build your own collections 
+    - act as starting points
+  - Concurrent Implementations (ConcurrentHashMap, CopyOnWriteArrayList...)
+    - by default implementations are not thread safe
+  - Algorithms (sort, binarySearch, ...)
+  - Utilities (Arrays.compare, ... Arrays class, ...)
+
+<br/>
+<br/>
+
+#### Collection Interfaces
+
+- Collection `java.util.Collection`
+  - put item, get item
+  - takes one object : item
+  ![](assets/2024-10-11-15-02-27.png)
+- Map
+  - item associated with another item
+  - takes two objects :  key, value
+  - breaks the convention of discrete items
+
+<br/>
+<br/>
+
+- Generalization
+  - Flexibility vs power
+    - say you are picking types where polymorphism is involved
+    - you make a choice between flexibility and power
+    - Vehicle, Truck classes
+      - Truck truck -- has access to all the member variables and methods of Truck class -- More power, Less Flexible
+      - Vehicle vehicle = truck -- has access to member variables and method of Vehicle class alone -- More Flexible, Less power
+- Types of Collections
+  - Index based retrieval collections
+  - Immutable collections -- can't add or remove
+    - no restriction on it's elements though. the reference can not be changed but using the reference the elements inside object can be changed 
+    - differs from collections with immutable objects
+  - Order based retrieval collections (next, prev)
+    - say TreeSet vs HashSet (in or not in, no next, prev)
+
+<br/>
+<br/>
+
+- make use of right data structure
+- data holding variable should have right type
+
+<br/>
+<br/>
+
+- Collection Interface
+  - what methods should it not have?
+    - Adding by Index
+    - Fetching next element
+    - Finding duplicate elements
+    - Removing an element
+    - Sorting 
+  - solves above problem in two ways
+    - Optional methods
+    - Iterator pattern
+  - methods
+    - `int size()`
+    - `boolean isEmpty()`
+    - `boolean contains(Object o)`
+    - `Object[] toArray()`
+    - `boolean add(E e)`
+      - immutable collection - this doesn't work
+      - `UnsupportedOperationException`
+      - may not make change collection always -- Set -- say adding what is already present
+    - `boolean remove(Object o)`
+    - `boolean containsAll(Collection<?> c)`
+    - `boolean addAll(Collection<? extends E> c)`
+    - `boolean removeAll(Collection<?> c)`
+    - `removeIf`
+    - `void clear()`
+  - provides
+    - Constructors for creating a collection
+    - Adding objects(without specifying where)
+    - Removing objects(without specifying where)
+    - Check if object exists
+    - Convert to Array
+    - Clearing the whole collection
+
+<br/>
+<br/>
+
+- interfaces as guidelines
+- higher parent class -- flexibility, lower child class -- power, specific
+- ideally go as high up in the hierarchy as possible without losing the power you need 
+
+
+<br/>
+<br/>
+
+#### Equality and equals method
+
+- object equality is not same as reference equality
+  - `Person p1 = new Person(); p1 == p2` -- checks if p1 and p2 point to same reference
+  - compare member variables or contents
+    - check all member variables? (say name, id, lastFetchedFromDB -- implementing detail)
+    - depends on the object
+    - only author can specify what defines object equality
+- `Object` class has `equals` method
+  - compares two objects
+  - defaults to reference equality
+  - allows implementations to override
+  - Standard API to compare: `p1.equals(p2)`
+    - you ask object p1 if object p2 is equal to object p1
+    - no third party which decides equality
+- Collections contract
+  - requires you to have a strong `equals` implementation
+  - `Set` -- no duplicate elements
+  - `contains` method uses `equals`
+    - returns true if and only if this collection contains at least one element e such that `(o==null ? e == null : o.equals(e))`
+  - `Collection<Person> myElements = //....; boolean isP1InCollection = myElements.contains(p1);`
+  - ...
+- Collections always store references
+- `equals`
+  - used to check object equality
+  - defaults to checking memory addresses, reference equality
+  - can be overridden to provide custom implementation
+  - should be based on the state that matters (member variables)
+    - what defines a object
+
+<br/>
+<br/>
+
+#### Rules for equality
+
+- Reflexivity
+  - an object should be equal to itself `p1.equals(p1)`
+- Symmetry
+  - if x is equal to y, then y should also be equal to x
+  - `p1.equals(p2) == p2.equals(p1)
+- Transitivity
+  - if x = y and y = z then x = z
+  - `p1.equals(p2); p2.equals(p3); p1.equals(p3)`
+- Consistency
+  - should return the same result unless the state of object has been modified
+- Non-nullity
+  - an object should never be considered equal to null
+  - `p1.equals(null)` -- should be false
+  - different collections treat null differently
+  - `null.equals(null)` -- null pointer exception
+
+#### equals implementation
+
+```java
+public class Person{
+  private String name;
+  private int age;
+
+  public boolean equals(Object o){
+    Person person = (Person) o; // might fail, o might not be of type Person; No type safety
+
+    if (this == o) { return true;}
+    if (o == null || getClass() != o.getClass()) { return false;}
+
+    Person person = (Person) o; // now you can cast
+
+    return age == person.age && name == person.name; // fails because name is not primitive, and it should use equals 
+
+    return age == person.age && name.equals(person.name); // might fail when name is null, null pointer exception
+
+    return age == person.age && name!= null && name.equals(person.name); // might fail; will returns false when name is null,  but what if person.name is also null
+
+    return age == person.age && Objects.equals(name, person.name); // works, equality check is done by a third party
+
+    return age 
+  }
+}
+```
+
+
+#### Hashing and Hash Codes
+
+- Hashing is not same as compression (you can't go back to original from hash)
+- the process of mapping data of arbitrary size to fixed-size values or keys, known as hash codes or hash values, that represent the original data in a way that can be easily and quickly looked up
+- use cases
+  - Password storage
+    - you don't need exact password, you just need password that hashes into same hash
+    - that is why MFA is important
+  - File integrity checking
+  - Digital signatures -- hash is a secret
+  - Caching
+- encryption is not always necessary for hashing, hash is not supposed be a secret but a lookup 
+- encryption is reversible 
+- hashing is a way to 
+  - reduce to one value
+  - compare two values without having to compare each element within value
+- Collections use hashing as a way to lookup
+  - finding an object in a collection -- finding the hash
+    - if hash matches, check if objects are same or if this is a hash collison
+  - 
+
+
+
+
+
+</details>
+
+-----
+
 ## _
 
 
