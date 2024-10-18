@@ -536,15 +536,433 @@
 - Holds similar data types, so that you can access ith element just by using simple math
 - index based -- 0 to 1
 - ith element address = arr_address + (i * element_size) -- all elelments have same size : homogenous 
+- soft delete -- seting the value to 0 or null or -1
 - Dynamic Arrays 
   - ![](assets/2024-10-16-14-55-08.png)
+> There is a common confusion that O ( 1 ) O(1) is always fast. This is not the case. There could be 1000 1000 operations and the time complexity could still be O ( 1 ) O(1). If the number of operations does not grow as the size of the data or input grows then it is O ( 1 ) O(1).
 - 
 
 | Operation | Time Complexity |
 | ----------| --------------- |
-| r/w ith element | O(1) | 
-| insert/remove at end | O(1) |
-| insert/remove middle | O(n) |
+| <span style="color: #ff0000;">r/w ith element</span> | <span style="color: #ff0000;">O(1)</span> | 
+| <span style="color: #ff0000;">insert/remove at end</span> | <span style="color: #ff0000;">O(1)</span> |
+| <span style="color: #ff0000;">insert/remove middle</span> | <span style="color: #ff0000;">O(n)</span> |
+
+### Static Arrays
+
+
+<details open>
+  <summary> python code </summary>
+
+<br>
+
+  ```python
+  # Insert n into arr at the next open position.
+  # Length is the number of 'real' values in arr, and capacity
+  # is the size (aka memory allocated for the fixed size array).
+  def insertEnd(arr, n, length, capacity):
+      if length < capacity:
+          arr[length] = n
+
+  # Remove from the last position in the array if the array
+  # is not empty (i.e. length is non-zero).
+  def removeEnd(arr, length):
+      if length > 0:
+          # Overwrite last element with some default value.
+          # We would also consider the length to be decreased by 1.
+          arr[length - 1] = 0
+
+  # Insert n into index i after shifting elements to the right.
+  # Assuming i is a valid index and arr is not full.
+  def insertMiddle(arr, i, n, length):
+      # Shift starting from the end to i.
+      for index in range(length - 1, i - 1, -1):
+          arr[index + 1] = arr[index]
+    
+      # Insert at i
+      arr[i] = n
+
+  # Remove value at index i before shifting elements to the left.
+  # Assuming i is a valid index.
+  def removeMiddle(arr, i, length):
+      # Shift starting from i + 1 to end.
+      for index in range(i + 1, length):
+          arr[index - 1] = arr[index]
+      # No need to 'remove' arr[i], since we already shifted
+
+  def printArr(arr, capacity):
+      for i in range(capacity):
+          print(arr[i])
+  ```
+</details>
+
+
+<details open>
+  <summary> javascript </summary>
+
+   ```javascript
+  class StaticArray {
+
+      // Insert n into arr at the next open position.
+      // Length is the number of 'real' values in arr, and capacity
+      // is the size (aka memory allocated for the fixed size array).
+      insertEnd(arr, n, length,  capacity) {
+          if (length < capacity) {
+              arr[length] = n;
+          }
+      }  
+
+      // Remove from the last position in the array if the array
+      // is not empty (i.e. length is non-zero).
+      removeEnd(arr, length) {
+          if (length > 0) {
+              // Overwrite last element with some default value.
+              // We would also consider the length to be decreased by 1.
+              arr[length - 1] = 0;
+              length--;
+          }
+      }  
+
+      // Insert n into index i after shifting elements to the right.
+      // Assuming i is a valid index and arr is not full.
+      insertMiddle(arr, i, n, length) {
+          // Shift starting from the end to i.
+          for (let index = length - 1; index > i - 1; index--) {
+              arr[index + 1] = arr[index];
+          }
+          //Insert at i
+          arr[i] = n;
+      }
+
+      // Remove value at index i before shifting elements to the left.
+      // Assuming i is a valid index.
+      removeMiddle(arr, i, length) {
+          // Shift starting from i + 1 to end.
+          for (let index = i + 1; index < length; index++) {
+              arr[index - 1] = arr[index];
+          } 
+          // No need to 'remove' arr[i], since we already shifted
+      }
+
+      printArr(arr, length) {
+          let s = "";
+          for (let i = 0; i < length; i++) {
+              s+= arr[i] + " ";
+          }      
+          console.log(s);
+      }
+  }
+   ```
+</details>
+
+
+<details open>
+  <summary> java </summary>
+
+   ```java
+  public class StaticArray {
+
+      // Insert n into arr at the next open position.
+      // Length is the number of 'real' values in arr, and capacity
+      // is the size (aka memory allocated for the fixed size array).
+      public void insertEnd(int[] arr, int n, int length, int capacity) {
+          if (length < capacity) {
+              arr[length] = n;
+          }
+      }    
+            
+      // Remove from the last position in the array if the array
+      // is not empty (i.e. length is non-zero).
+      public void removeEnd(int[] arr, int length) {
+          if (length > 0) {
+              // Overwrite last element with some default value.
+              // We would also consider the length to be decreased by 1.
+              arr[length - 1] = 0;
+              length--;
+          }
+      }        
+
+      // Insert n into index i after shifting elements to the right.
+      // Assuming i is a valid index and arr is not full.
+      public void insertMiddle(int[] arr, int i, int n, int length) {
+          // Shift starting from the end to i.
+          for (int index = length - 1; index > i - 1; index--) {
+              arr[index + 1] = arr[index];
+          }
+          // Insert at i
+          arr[i] = n;
+      }
+
+      // Remove value at index i before shifting elements to the left.
+      // Assuming i is a valid index.
+      public void removeMiddle(int[] arr, int i, int length) {
+          // Shift starting from i + 1 to end.
+          for (int index = i + 1; index < length; index++) {
+              arr[index - 1] = arr[index];
+          } 
+          // No need to 'remove' arr[i], since we already shifted
+      }
+
+      public void printArr(int[] arr, int length) {
+          for (int i = 0; i < length; i++) {
+              System.out.print(arr[i] + " ");
+          }      
+          System.out.println();
+      }
+  }    
+   ```
+</details>
+
+
+<details open>
+  <summary> cpp </summary>
+
+   ```cpp
+  #include <iostream>
+
+  using std::cout;
+  using std::endl;
+
+  // Insert n into arr at the next open position.
+  // Length is the number of 'real' values in arr, and capacity
+  // is the size (aka memory allocated for the fixed size array).
+  void insertEnd(int arr[], int n, int length, int capacity) {
+      if (length < capacity) {
+          arr[length] = n;
+      }
+  }
+
+  // Remove from the last position in the array if the array
+  // is not empty (i.e. length is non-zero).
+  void removeEnd(int arr[], int length) {
+      if (length > 0) {
+          // Overwrite last element with some default value.
+          // We would also consider the length to be decreased by 1.
+          arr[length - 1] = 0;
+      }
+  }
+
+  // Insert n into index i after shifting elements to the right.
+  // Assuming i is a valid index and arr is not full.
+  void insertMiddle(int arr[], int i, int n, int length) {
+      // Shift starting from the end to i.
+      for (int index = length - 1; index >= i; index--) {
+          arr[index + 1] = arr[index];
+      }   
+      // Insert at i
+      arr[i] = n;
+  }
+
+  // Remove value at index i before shifting elements to the left.
+  // Assuming i is a valid index.
+  void removeMiddle(int arr[], int i, int length) {
+      // Shift starting from i + 1 to end.
+      for (int index = i + 1; index < length; index++) {
+          arr[index - 1] = arr[index];
+      }
+      // No need to 'remove' arr[i], since we already shifted
+  }
+
+  void printArr(int arr[], int capacity) {
+      for (int i = 0; i < capacity; i++) {
+          cout << arr[i] << ' ';
+      }
+      cout << endl;
+  }
+   ```
+</details>
+
+
+<details open>
+  <summary> swift </summary>
+
+   ```swift
+  // Insert n into arr at the next open position.
+  // Length is the number of 'real' values in arr, and capacity
+  // is the size (aka memory allocated for the fixed size array).
+  func insertEnd(_ arr: inout [Int], _ n: Int, _ length: Int, _ capacity: Int) {
+    if length < capacity {
+      arr[length] = n
+    }
+  }
+
+  // Remove from the last position in the array if the array 
+  // is not empty (i.e. length is non-zero).
+  func removeEnd(_ arr: inout [Int], _ length: Int) {
+    if length > 0 {
+      // Overwrite last element with some default value
+      // We would also consider the length to be decreased by 1
+      arr[length - 1] = 0
+    }
+  }
+
+  // Insert n into index i after shifting elements to the right.
+  // Assuming i is a valid index and arr is not full
+  func insertMiddle(_ arr: inout [Int], _ i: Int, _ n: Int, _ length: Int) {
+    // Shift starting from the end to i
+    for index in stride(from: length - 1, through: i, by: -1) {
+      arr[index + 1] = arr[index]
+    }
+
+    // Insert at i
+    arr[i] = n
+  }
+
+  // Remove value at index i before shifting elements to the left.
+  // Assuming i is a valid index
+  func removeMiddle(_ arr: inout [Int], _ i: Int, _ length: Int) {
+    // Shift starting from i + 1 to end
+    for index in i + 1..<length {
+      arr[index - 1] = arr[index]
+    }
+    // No need to 'remove' arr[i] since we already shifted
+  }
+
+  func printArr(_ arr: [Int], _ capacity: Int) {
+    for i in 0..<capacity {
+      print(arr[i], terminator: " ")
+    }
+    print()
+  }
+   ```
+</details>
+
+
+<details open>
+  <summary> csharp </summary>
+
+   ```csharp
+  public class StaticArray
+  { 
+      // Insert n into arr at the next open position.
+      // Length is the number of 'real' values in arr, and capacity
+      // is the size (aka memory allocated for the fixed size array).
+      public void InsertEnd(int[] arr, int n, int length, int capacity)
+      {
+          if (length < capacity)
+          {
+              arr[length] = n;
+          }
+      }
+
+      // Remove from the last position in the array if the array
+      // is not empty (i.e. length is non-zero).
+      public void removeEnd(int[] arr, int length)
+      {
+          if (length > 0)
+          {
+              // Overwrite last element with some default value.
+              // We would also consider the length to be decreased by 1.
+              arr[length - 1] = 0;
+              length--;
+          }
+      }
+
+      // Insert n into index i after shifting elements to the right.
+      // Assuming i is a valid index and arr is not full.
+      public void InsertMiddle(int[] arr, int i, int n, int length)
+      {
+          // Shift starting from the end to i.
+          for (int index = length - 1; index > i - 1; index--)
+          {
+              arr[index + 1] = arr[index];
+          }
+          // Insert at i
+          arr[i] = n;
+      }
+
+      // Remove value at index i before shifting elements to the left.
+      // Assuming i is a valid index.
+      public void RemoveMiddle(int[] arr, int i, int length)
+      {
+          // Shift starting from i + 1 to end.
+          for (int index = i + 1; index < length; index++)
+          {
+              arr[index - 1] = arr[index];
+          }
+          // No need to 'remove' arr[i], since we already shifted
+      }
+
+      public void PrintArr(int[] arr, int length)
+      {
+          for (int i = 0; i < length; i++)
+          {
+              Console.Write(arr[i] + " ");
+          }
+          Console.WriteLine();
+      }
+  }
+   ```
+</details>
+
+
+
+<details open>
+  <summary> go </summary>
+
+   ```go
+  package main
+
+  import (
+    "fmt"
+  )
+
+  // insertEnd inserts n into arr at the next open position.
+  func insertEnd(arr []int, n, length, capacity int) []int {
+    if length < capacity {
+      arr[length] = n
+      length++
+    }
+    return arr
+  }
+
+  // removeEnd removes from the last position in the array if the array
+  // is not empty (i.e., length is non-zero).
+  func removeEnd(arr []int, length int) []int {
+    if length > 0 {
+      arr[length-1] = 0
+      length--
+    }
+    return arr
+  }
+
+  // insertMiddle inserts n into index i after shifting elements to the right.
+  // Assuming i is a valid index and arr is not full.
+  func insertMiddle(arr []int, i, n, length int) []int {
+    // Shift starting from the end to i.
+    for index := length - 1; index > i-1; index-- {
+      arr[index+1] = arr[index]
+    }
+    // Insert at i
+    arr[i] = n
+    length++
+    return arr
+  }
+
+  // removeMiddle removes value at index i before shifting elements to the left.
+  // Assuming i is a valid index.
+  func removeMiddle(arr []int, i, length int) []int {
+    // Shift starting from i + 1 to end.
+    for index := i + 1; index < length; index++ {
+      arr[index-1] = arr[index]
+    }
+    // No need to 'remove' arr[i], since we already shifted
+    arr[length-1] = 0
+    length--
+    return arr
+  }
+
+  // printArr prints the array up to the length
+  func printArr(arr []int, length int) {
+    for i := 0; i < length; i++ {
+      fmt.Print(arr[i], " ")
+    }
+    fmt.Println()
+  }
+   ```
+</details>
+
+
 
 
 
