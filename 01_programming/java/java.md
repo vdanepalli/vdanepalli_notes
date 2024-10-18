@@ -1744,11 +1744,435 @@ public class Person{
 - Collections use hashing as a way to lookup
   - finding an object in a collection -- finding the hash
     - if hash matches, check if objects are same or if this is a hash collison
-  - 
+
+#### Equality and Hash Code
+
+- When two objects are equal according to equals() they should also have the same hash code
+- `public int hashCode(){ ... }`
+- default : generates hashcode that's based on memory address
+- you can use a unique member variable 
+- or you generate a hash that's based on a combination that's unique
+
+<br/>
+<br/>
+
+- generating hash code 
+- for single object: `Objects.hashCode`
+- for multiple objects: `Objects.hash`
+  ```java
+  public int hashCode(){
+    return Objects.hash(x, y);
+
+    // say x pr y is a referenec to another object, the object which x or y refers to should have a hashCode function  implemented
+  }
+  ```
+
+  ```java
+  import java.util.Date;
+  package io.javabrains.javacollections;
+
+  public class EqualsAndHashCode{
+    public static void main(String[] args){
+      Person p1 = new Person("ash", "win", 1239, new Date());
+      Person p2 = new Person("ash", "win", 1239, new Date());
+
+      System.out.println(p1.equals(p2)); // true
+      System.out.println(p1.hashCode() == p2.hashCode()); // true
+
+    }
+  }
 
 
+  class Person{
+    private String firstName;
+    private String lasttName;
+    private int age;
+    private Date lastModifiedDate;
+
+    public Person(String firstName, String lastName, int age, Date lastModifiedTime){
+      this.firstName = firstName;
+      this.lastName = lastName;
+      this.age = age;
+      this.lastModifiedDate = lastModifiedDate
+    }
+  
+
+    public String getFirstName(){
+      return firstName;
+    }
+
+    public void setFirstName(String firstName){
+      this.firstName = firstName;
+    }
+
+    @Override // say you are trying to override something which doesn't actually exist, this throws error
+    public boolean equals(Object o){
+      if (o == this) return true;
+      if (o == null || getClass() != o.getClass()) return false; // this.getClass() is same as getClass() -- this is implicit
+      Person other = (Person) o;
+      return age == other.age && Objects.equals(this.firstName, other.firstName) && Objects.equals(this.getFirstName, other.getFirstName); 
+      // can use getters or private variables -- within the class
+    }
+
+    @Override
+    public int hashCode(){
+      return Objects.hash(firstName, lastName, age); 
+    }
+  }
+  ```
 
 
+<br/>
+<br/>
+
+### Complexity and Comparison
+
+#### Time Complexity
+
+- how long does something take?
+  - it depends on
+    - size of the input
+    - algorithm used
+- given algorithm --> time depends on the size of the input
+- time complexity --> number of operations as a ratio of input
+  - O(1) constant -- pick any number
+  - O(n) linear -- mowing a lawn
+  - O(n^2) quadratic -- you have to go through each for each 
+  - O(log n) -- binary search, dictionary
+  - O(2 ^ n) -- exponential
+
+#### Space complexity and tradeoffs
+
+- tradeoff between time and space
+- dynamic programming : practice in which when you have some processing that needs to be done repeatedly for the same set of inputs and you know you are gonna get the same set of outputs, you are going to essentially cache for performance. Remember the calculation
+- Storing the result
+- best use case of DP is recursion
+- space is often not a bottleneck
+
+#### Comparator and Comparable
+
+- `Comparable<T>` Inerface
+  - imposes natural ordering of a class
+  - not all objects can be compared (say dbconn1 > dbconn2 -- doesn't make sense)
+  - doesn't assume that objects are Comparable, you have to declare it 
+  - `compareTo()` method is referrede to as natural ordering 
+    - commonly used for sorting
+- say `compare` says they are the same, doesn't mean they are equal
+- compares is related to sorting, ranking  
+```java
+public class Person implements Comparable<Person>{
+  private String name; 
+  private int age;
+
+  @Override
+  public int compareTo(Person other){
+    return this.age - other.age; // edge case, say this.age is negative (already at the boundary) -- overflow might occur
+
+    return Integer.compare(this.age, other.age); // best practice; handles overflow case
+
+    // positive --- current or this object is greater
+    // 0 -- they are same
+    // negative -- other object is greater
+  }
+}
+```
+
+<br/>
+<br/>
+
+- `Comparator`
+  - to define a custom ordering different from the object's natural ordering
+  - third party judge, sorter 
+```java
+public class PersonComparator implements Comparator<Person>{
+  @Override
+  public int compare(Person p1, Person p2){
+    return p1.getName().compareTo(p2.getName()); // can be a null pointer exception when getName() returns null
+  }
+}
+
+List<Person> people = new ArrayList<>();
+people.add(new Person("ash", 39));
+people.add(new Person("jash", 29));
+people.add(new Person("winai", 12));
+
+Collections.sort(people); // uses Comparable interface -- natural ordering
+
+PersonComparator nameComparator = new PersonComparator();
+Collections.sort(people, nameComparator); // sorts using Comparator interface -- customized sorting or ordering
+```
+
+
+### Iterators and Collection Interface
+
+#### The iterator pattern
+
+- way to traverse collection of objects without exposing its underlying representation
+- iterator
+  - implementation agnostic
+  - separates traversal algorithm from collection
+  - works by providing a separate iterator object
+- iterator works on those which are iterable, that which extends Iterator
+- Collection  extends Iterator 
+```java
+public class IteratorExercise{
+  public static void main(String[] args){
+    FruitSupplier fruitSupplier = new FruitSupplier();
+    Collection<String> fruits = fruitSupplier.getFruits();
+    Iterator<String> iterator = fruits.iterator();
+
+    while(iterator.hasNext()){
+      String fruitStr = iterator.next();
+
+      if fruitStr == 'something'{
+        iterator.remove (...) // this is valid because you are going through the formal process
+      }
+      System.out.println("fruitStr = " + fruitStr);
+    }
+
+
+    for(String fruitStr: fruits) System.out.printl("fruitStr = " + fruitStr);
+  }
+}
+
+
+class FruitSupplier{
+  public Collection<String> getFruits(){
+    ArrayList<String> list = new ArrayList<>();
+    list.add("ash"); 
+    list.add("winai");
+    list.add("jash");
+    return list; 
+  }
+}
+```
+
+
+#### Fail fast iterators
+
+- iterators not tolerant to underlying changes 
+  - imagine while iterating, something in the collection changes (element gets removed/added ... )
+    - the collection has a different state than when the iterator was first created
+    - iterator throws an exception because it doesn't know how to deal with the change
+  - Collection uses internal modification counter
+    - any change to collection is kept track of using this
+    - throws `ConcurrentModificationException` if modified since last has `next()`;
+- these throw `ConcurrentModificationException` on a best-effort basis
+  - try to alert you
+  - exception is not guaranteed. 
+  - you can modify collection without triggering exception
+
+#### The collection interface hierarchy
+
+- Collection
+  - Set -- provide contract on how or what behavior is expected; underlying implementation varies
+    - SortedSet
+  - List
+  - Queue
+  - Deque
+- Map
+  - SortedMap
+
+<br/>
+<br/>
+
+### The List Interface and Variants
+
+#### List Interface
+
+- used to represent ordered collection
+- elements are stored in a specific order
+- can be accessed by their index
+- extends `Collection` interface
+- adds additional methods for index based access -- say get ith element
+- capabilities
+  - positional access -- get, set, add, addAll, remove
+  - search -- indexOf, lastIndexOf
+  - iteration -- special iterator called ListIterator that can go in both directions
+  - range view -- slice, ...
+- `List` makes a promist and `ArrayList` fulfills it. Kinda like, List is a contract agreement, and ArrayList is an implementation that sees to it that the contract is abiding. 
+- implementations
+  - `ArrayList`
+    ```java
+    import java.util.ArrayList;
+    import java.util.List;
+
+    public class ListExample{
+      public static void main(String[] args){
+        List<String> fruits = new ArrayList<>();
+
+        fruits.add("ash");
+        fruits.add("winai");
+
+        List<String> fruits = Arrays.asList("ash", "winai"); // quick and dirty // mutable in all kinds of ways
+        List<String> fruits = List.of("ash", "winai"); // quick and less dirty // what you get is immutable 
+
+        List<String> fruits2 = new ArrayList<>(fruits); // copies fruits to fruits2 
+      }
+    }
+    ```
+  - `LinkedList`
+
+  - `Vector`
+  - `Stack`
+  - `CopyOnWriteArrayList`
+
+#### Amortized time complexity
+
+- `ArrayList`
+- internally uses an array. it's a wrapper on array
+- commonly used
+- time complexities
+  - O(1) most cases
+  - O(n) worst case -- when array is full and you want to add, or remove element at index 0 etc
+    - larger array allocation
+    - array size is doubled when resized
+  - Amortization -- averaging, evens out, average it out
+- list is a bunch of references. 
+- time complexity 
+  - add() O(1)
+  - add(index, element) O(n)
+  - get O(1)
+  - remove O(n)
+  - indexOf O(n)
+  - contains O(n)
+
+#### LinkedList
+
+- LinkedList - doubly linked list
+- each element is connected to next and prev elements
+- each Node has next, prev, value (value is again a reference)
+- most operations are O(n) add, get, set, ...
+- some operations are O(1) append and remove at end
+- time complexity
+  - add() O(1)
+  - add(index, element) O(n)
+  - get() O(n)
+  - remove() O(n)
+  - contains() O(n)
+- uses more memory than ArrayList and Vector as it needs to store links between elements
+
+```java
+List<String> fruits = new LinkedList<>();
+
+fruits.get(12);  // O(n)
+fruits.remove(39); // O(1)
+```
+
+#### Vector
+
+- thread safe version of ArrayList
+- it is syncrhonized
+- similar to ArrayList
+- uncommon usage -- since it doesn't know, it assumes thread safety is needed and goes through all of the synchronization process (locking and unlocking)
+  - could be an overhead if you know only one thread is going to access it
+
+#### Autoboxing with Lists
+
+- can be used with autoboxing to store primitive data types
+- `List<Integer> numbers = new ArrayList<>()`
+- `numbers.add(39)` -- 39 is primitive and not an object instance but java takes care of it by autoboxing it into Integer instance
+- autoboxing and autounboxing
+
+#### CopyOnWriteArrayList
+
+- thred-safe variant of ArrayList
+- concurrent collection class
+- uses copy on write strategy
+  - ensures that the multiple threads can read simultaneously without the need for locking unlocking
+  - so say, you have an ArrayList, and you want to remove an element
+    - while applying change if some other thread tries to read, then it doesn't get the updated results. it has outdated list
+    - that is why ArrayList isn't thread-safe
+- is will suited when many threads will be reading the list, but relatively few will be modifying it
+- less efficient than standard ArrayList when modifications are frequent
+
+#### List iterators
+
+- default iterator : index order
+- `hasNext`, `next`, `remove`
+- `ListIterator` -- list specific iterator
+  - allows you to move forward or backward
+  - `hasPrevious`, `previous`
+- has `set` and `add`
+
+```java
+import java.util.ListIterator;
+
+ListIterator<String> iterator = list.listIterator(); // the iterator doesn't point to element; it is always in between elements.
+
+while(iterator.hasNext()){
+  iterator.next();
+}
+
+while(iterator.hasPrevious()){
+  iterator.previous()
+}
+
+public static <E> void replace(List<E> list, E val, E newVal){
+  for( ListIterator<E> it = list.listIterator(); it.hasNext(); ){
+    if (val.equals(it.next())){
+      it.set(newVal);
+    }
+  }
+}
+```
+
+![](assets/2024-10-12-01-02-46.png)
+
+#### SubList
+
+- returns a slice of the original list
+- returned list is backed by the original list, doesn't make a copy
+- changes to the original list, will reflect in sublist
+- `List<String> subList = fruits.subList(start, end)`
+- `fruits.set(1, "bananaaaa");`
+- useful when you need to perform an operation on a range
+- `list.subList(from, to).clear()`
+
+#### Equals with List objects
+
+- list equals compares list instance type, size, and then each of the elements to check for equality
+
+
+<br/>
+<br/>
+
+### Exploring Sets
+
+#### Set Interface
+
+- a collection that cannot contain duplicate elements
+- mathematical set abstraction
+- automatically dedupes -- doesn't add duplicates
+- has only methods for Collection
+- stronger contract for equals
+- contains no pair of elements e1 and e2 such that e1.equals(e2) is true
+- can contain atmost one null
+- `Set<Person> persons = new HashSet<>()`
+- `Collection<Person> persons = new HashSet<Person>()`
+- `Collection<Type> noDupes = new HashSet<Type>(c);`
+- Implementations
+  - HashSet
+  - TreeSet
+  - LinkedHashSet
+
+#### HashSet
+
+  - stores elements in a Hash Table
+  - best performing set
+  - no guarantee of order
+  -  
+
+#### HashSet load factor and capacity
+
+
+#### SortedSet and TreeSet
+
+
+#### TreeSet
+
+
+#### NavigableSet
 
 </details>
 

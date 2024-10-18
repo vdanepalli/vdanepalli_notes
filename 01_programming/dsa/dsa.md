@@ -531,6 +531,22 @@
 
 ## Arrays
 
+- RAM : Random Access Memory
+- Arrays : Stored at continuous locations 
+- Holds similar data types, so that you can access ith element just by using simple math
+- index based -- 0 to 1
+- ith element address = arr_address + (i * element_size) -- all elelments have same size : homogenous 
+- Dynamic Arrays 
+  - ![](assets/2024-10-16-14-55-08.png)
+- 
+
+| Operation | Time Complexity |
+| ----------| --------------- |
+| r/w ith element | O(1) | 
+| insert/remove at end | O(1) |
+| insert/remove middle | O(n) |
+
+
 
 
 ## Linked Lists
