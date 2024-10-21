@@ -962,10 +962,820 @@
    ```
 </details>
 
+- problem : [remove duplicates from sorted array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)
+   ```python
+  class Solution:
+    def removeDuplicates(self, nums: List[int]) -> int:
+        left = 1
+        for right in range(1, len(nums)):
+            if nums[right] != nums[right - 1]:
+                nums[left] = nums[right]
+                left = left + 1
+        return left      
+  ```
+- problem: [remove element](https://leetcode.com/problems/remove-element/)
+  ```python
+  class Solution:
+      def removeElement(self, nums: List[int], val: int) -> int:
+          k = 0
+          for i in range(len(nums)):
+              if nums[i] != val:
+                  nums[k] = nums[i]
+                  k += 1
+          return k
+
+  # Optimized solution with the same time and space complexity
+  class Solution:
+      def removeElement(self, nums: List[int], val: int) -> int:
+          # Avoid unessary copy operations in a previous solution, when k == i and nums[i] != val 
+          # by swapping nums[i] and the last element of the array (nums[n])
+          n = len(nums)
+          i = 0
+
+          while i < n:
+              if nums[i] == val:
+                  nums[i], nums[n - 1] = nums[n - 1], nums[i]
+                  n -= 1  # decrement the length of the array by discarding the last element
+              else:
+                  i += 1
+        
+          return n
+  ```
+
+### Dynamic Arrays
+
+
+<details open>
+  <summary> python </summary>
+
+   ```python
+  # Python arrays are dynamic by default, but this is an example of resizing.
+  class Array:
+      def __init__(self):
+          self.capacity = 2
+          self.length = 0
+          self.arr = [0] * 2 # Array of capacity = 2
+
+      # Insert n in the last position of the array
+      def pushback(self, n):
+          if self.length == self.capacity:
+              self.resize()
+            
+          # insert at next empty position
+          self.arr[self.length] = n
+          self.length += 1
+
+      def resize(self):
+          # Create new array of double capacity
+          self.capacity = 2 * self.capacity
+          newArr = [0] * self.capacity 
+        
+          # Copy elements to newArr
+          for i in range(self.length):
+              newArr[i] = self.arr[i]
+          self.arr = newArr
+        
+      # Remove the last element in the array
+      def popback(self):
+          if self.length > 0:
+              self.length -= 1
+    
+      # Get value at i-th index
+      def get(self, i):
+          if i < self.length:
+              return self.arr[i]
+          # Here we would throw an out of bounds exception
+
+      # Insert n at i-th index
+      def insert(self, i, n):
+          if i < self.length:
+              self.arr[i] = n
+              return
+          # Here we would throw an out of bounds exception       
+
+      def print(self):
+          for i in range(self.length):
+              print(self.arr[i])
+          print()
+
+   ```
+</details>
+
+
+<details open>
+  <summary> javascript </summary>
+
+   ```javascript
+  class DynamicArray {
+      constructor() {
+          this.capacity = 2;
+          this.length = 0;
+          this.arr = new Array(2);
+      }
+
+      // Insert n in the last position of the array
+      pushback(n) {
+          if (this.length == this.capacity) {
+              this.resize();
+          }
+  
+          // insert at next empty position
+          this.arr[this.length] = n;
+          this.length++;
+      }
+
+      resize() {
+          // Create new array of double capacity
+          this.capacity = 2 * this.capacity;
+          const newArr = new Array(this.capacity); 
+        
+          // Copy elements to newArr
+          for (let i = 0; i < this.length; i++) {
+              newArr[i] = this.arr[i];
+          }
+          this.arr = newArr;
+      } 
+
+      // Remove the last element in the array
+      popback() {
+          if (this.length > 0) {
+              this.length--;
+          }  
+      }    
+
+      // Get value at i-th index
+      get(i) {
+          if (i < this.length) {
+              return this.arr[i];
+          }    
+          // Here we would throw an out of bounds exception
+          return;
+      }    
+
+      // Insert n at i-th index
+      insert(i, n) {
+          if (i < this.length) {
+              this.arr[i] = n;
+              return;
+          }    
+          return;
+          // Here we would throw an out of bounds exception  
+      } 
+
+      print() {
+          let s = "";
+          for (let i = 0; i < this.length; i++) {
+              s+= this.arr[i] + " ";
+          }      
+          console.log(s);
+      }
+  }
+   ```
+</details>
+
+
+<details open>
+  <summary> java </summary>
+
+   ```java
+  public class DynamicArray {
+      int capacity;
+      int length;
+      int[] arr;
+
+      public DynamicArray() {
+          capacity = 2;
+          length = 0;
+          arr = new int[2];
+      }
+
+      // Insert n in the last position of the array
+      public void pushback(int n) {
+          if (length == capacity) {
+              this.resize();
+          }
+               
+          // insert at next empty position
+          arr[length] = n;
+          length++;
+      }
+
+      public void resize() {
+          // Create new array of double capacity
+          capacity = 2 * capacity;
+          int[] newArr = new int[capacity]; 
+        
+          // Copy elements to newArr
+          for (int i = 0; i < length; i++) {
+              newArr[i] = arr[i];
+          }
+          arr = newArr;
+      }  
+
+      // Remove the last element in the array
+      public void popback() {
+          if (length > 0) {
+              length--;
+          }  
+      }     
+
+      // Get value at i-th index
+      public int get(int i) {
+          if (i < length) {
+              return arr[i];
+          }    
+          // Here we would throw an out of bounds exception
+          return -1;
+      }    
+
+      // Insert n at i-th index
+      public void insert(int i, int n) {
+          if (i < length) {
+              arr[i] = n;
+              return;
+          }    
+          return;
+          // Here we would throw an out of bounds exception  
+      }        
+
+      public void print() {
+          for (int i = 0; i < length; i++) {
+              System.out.println(arr[i]);
+          }
+      }
+  } 
+
+   ```
+</details>
 
 
 
+<details open>
+  <summary> cpp </summary>
 
+   ```cpp
+  #include <iostream>
+
+  using std::cout;
+  using std::endl;
+
+  // Example implementation of a resizable array (i.e. a vector).
+  class Array {
+  public:
+      int capacity = 2;
+      int length = 0;
+      int *arr = new int[2]; // Array of capacity = 2
+
+      Array(){};
+
+      // Insert n in the last position of the array
+      void pushback(int n) {
+          if (length == capacity)
+          {
+              resize();
+          }
+          // insert at next empty position
+          arr[length++] = n;
+      }
+
+      void resize() {
+          // Create new array of double capacity
+          capacity = 2 * capacity;
+          int *newArr = new int[capacity];
+
+          // Copy elements to newArr
+          for (int i = 0; i < length; i++)
+          {
+              newArr[i] = arr[i];
+          }
+          arr = newArr;
+          // Normally we would use smart pointers or free the old arr's memory
+      }
+
+      // Remove the last element in the array
+      void popback() {
+          if (length > 0) {
+              length--;
+          }
+      }
+
+      // Get value at i-th index
+      int get(int i) {
+          if (i < length) {
+              return arr[i];
+          }
+          // Here we would throw an out of bounds exception
+      }
+
+      // Insert n at i-th index
+      void insert(int i, int n) {
+          if (i < length) {
+              arr[i] = n;
+              return;
+          }
+          // Here we would throw an out of bounds exception
+      }
+
+      void print() {
+          for (int i = 0; i < length; i++) {
+              cout << arr[i] << ' ';
+          }
+          cout << endl;
+      }
+  };
+
+   ```
+</details>
+
+
+<details open>
+  <summary> swift </summary>
+
+   ```swift
+  // Swift arrays are dynamic when using 'var' to declare the array, but this is an example of resizing 
+  class Array {
+    var capacity = 2
+    var length = 0
+    var arr = Swift.Array(repeating: 0, count: 2) // Array of capacity = 2
+
+    // Insert n in the last position of the array
+    func pushback(_ n: Int) {
+      if length == capacity {
+        resize()
+      }
+      arr[length] = n
+      length += 1
+    }
+
+    func resize() {
+      // Create new array of double capacity
+      capacity = 2 * capacity
+      var newArr = Swift.Array(repeating: 0, count: capacity)
+
+      // Copy elements to newArr
+      for i in 0..<length {
+        newArr[i] = arr[i]
+      }
+      arr = newArr
+    }
+
+    // Remove the last element in the array 
+    func popback() {
+      if length > 0 {
+        length -= 1
+      }
+    }
+
+    // Get value at i-th index
+    func get(_ i: Int) -> Int {
+      if i < length {
+        return arr[i]
+      }
+      // Here we would throw an out of bounds exception
+      return -1
+    }
+
+    // Insert n at i-th index
+    func insert(_ i: Int, _ n: Int) {
+      if i < length {
+        arr[i] = n
+        return
+      }
+      // Here we would throw an out of bounds exception
+    } 
+
+    func print() {
+      for i in 0..<length {
+        Swift.print(arr[i], terminator: " ")
+      }
+      Swift.print()
+    }
+  }
+   ```
+</details>
+
+
+
+<details open>
+  <summary> C# </summary>
+
+   ```C#
+
+  public class DynamicArray
+  {
+      int capacity;
+      int length;
+      int[] arr;
+
+      public DynamicArray()
+      {
+          capacity = 2;
+          length = 0;
+          arr = new int[2];
+      }
+
+      // Insert n in the last position of the array
+      public void PushBack(int n)
+      {
+          if (length == capacity)
+          {
+              this.Resize();
+          }
+
+          // insert at next empty position
+          arr[length] = n;
+          length++;
+      }
+
+      public void Resize()
+      {
+          // Create new array of double capacity
+          capacity = 2 * capacity;
+          int[] newArr = new int[capacity];
+
+          // Copy elements to newArr
+          for (int i = 0; i < length; i++)
+          {
+              newArr[i] = arr[i];
+          }
+          arr = newArr;
+      }
+
+      // Remove the last element in the array
+      public void PopBack()
+      {
+          if (length > 0)
+          {
+              length--;
+          }
+      }
+
+      // Get value at i-th index
+      public int Get(int i)
+      {
+          if (i < length)
+          {
+              return arr[i];
+          }
+          // Here we would throw an out of bounds exception
+          return -1;
+      }
+
+      // Insert n at i-th index
+      public void Insert(int i, int n)
+      {
+          if (i < length)
+          {
+              arr[i] = n;
+              return;
+          }
+          // Here we would throw an out of bounds exception  
+          return;
+      }
+
+      public void Print()
+      {
+          for (int i = 0; i < length; i++)
+          {
+              Console.Write(arr[i] + " ");
+          }
+      }
+  }
+   ```
+</details>
+
+
+
+<details open>
+  <summary> go </summary>
+
+   ```go
+  package main
+
+  import (
+    "fmt"
+  )
+
+  type DynamicArray struct {
+    Capacity, Length int
+    Arr              []int
+  }
+
+  func NewDynamicArray() *DynamicArray {
+    return &DynamicArray{
+      Capacity: 2,
+      Length:   0,
+      Arr:      make([]int, 2),
+    }
+  }
+
+  func (d *DynamicArray) Pushback(n int) {
+    if d.Length == d.Capacity {
+      d.Resize()
+    }
+
+    d.Arr[d.Length] = n
+    d.Length++
+  }
+
+  func (d *DynamicArray) Resize() {
+    d.Capacity = d.Capacity * 2
+    newArr := make([]int, d.Capacity)
+
+    copy(newArr, d.Arr)
+    d.Arr = newArr
+  }
+
+  func (d *DynamicArray) Popback() {
+    if d.Length > 0 {
+      d.Length--
+    }
+  }
+
+  func (d *DynamicArray) Get(i int) int {
+    if i < d.Length {
+      return d.Arr[i]
+    }
+    return -1
+  }
+
+  func (d *DynamicArray) Insert(i, n int) {
+    if i < d.Length {
+      d.Arr[i] = n
+    }
+  }
+
+  func (d *DynamicArray) Print() {
+    for i := 0; i < d.Length; i++ {
+      fmt.Println(d.Arr[i])
+    }
+  }
+
+   ```
+</details>
+
+
+- problem: [Concatenation of Array](https://leetcode.com/problems/concatenation-of-array/)
+  ```python
+  class Solution:
+  def getConcatenation(self, nums: List[int]) -> List[int]:
+      ans = []
+      for i in range(2):
+          for n in nums:
+              ans.append(n)
+      return ans
+
+  ```
+
+### Stacks
+
+
+<details open>
+  <summary> python </summary>
+
+   ```python
+  # Implementing a stack is trivial using a dynamic array
+  # (which we implemented earlier).
+  class Stack:
+      def __init__(self):
+          self.stack = []
+
+      def push(self, n):
+          self.stack.append(n)
+
+      def pop(self):
+          return self.stack.pop()
+   ```
+</details>
+
+
+
+<details open>
+  <summary> javascript </summary>
+
+   ```javascript
+  // Implementing a stack is trivial using a dynamic array
+  // (which we implemented earlier).
+  class Stack {
+      constructor() {
+          this.stack = new Array();                                                                   
+      }
+
+      push(n) {
+          this.stack.push(n);
+      }
+
+      pop() {
+          return this.stack.pop();
+      }
+
+      size() {
+          return this.stack.length;
+      }
+  }
+
+   ```
+</details>
+
+
+<details open>
+  <summary> java </summary>
+
+   ```java
+  import java.util.ArrayList;
+
+  // Implementing a stack is trivial using a dynamic array
+  // (which we implemented earlier).
+  public class Stack {
+
+      ArrayList<Integer> stack = new ArrayList<Integer>();
+
+      public Stack() {   
+      }
+
+      public void push(int n) {
+          stack.add(n);
+      }
+
+      public int pop() {
+          return stack.remove(stack.size() - 1);
+      }
+
+      public int size() {
+          return stack.size();
+      }
+  }
+   ```
+</details>
+
+
+
+<details open>
+  <summary> cpp </summary>
+
+   ```cpp
+  #include <vector>
+
+  using std::vector;
+
+  // Implementing a stack is trivial using a dynamic array
+  // (which we implemented earlier).
+  class Stack {
+  public:
+      vector<int> stack_;
+
+      Stack() {};
+
+      void push(int n) {
+          stack_.push_back(n);
+      }
+
+      int pop() {
+          int res = stack_[stack_.size() - 1];
+          stack_.pop_back();
+          return res;
+      }
+  };
+   ```
+</details>
+
+
+<details open>
+  <summary> swift </summary>
+
+   ```swift
+  // Implementing a stack is trivial using a dynamic array
+  // (which we implemented earlier).
+  class Stack {
+    var stack: [Int] = []
+
+    func push(_ n: Int) {
+      stack.append(n)
+    } 
+
+    func pop() -> Int {
+      return stack.removeLast()
+    }
+  }
+   ```
+</details>
+
+
+<details open>
+  <summary> C# </summary>
+
+   ```C#
+  using System;
+  using System.Collections;
+
+  // Implementing a stack is trivial using a dynamic array
+  // (which we implemented earlier).
+  public class Stack
+  {
+      ArrayList stack = new();
+
+      public Stack() {}
+
+      public void Push(int n)
+      {
+          stack.Add(n);
+      }
+
+      public int Pop()
+      {
+          if (Size() > 0)
+          {
+              int ele = (int)stack[stack.Count - 1];
+              stack.RemoveAt(stack.Count - 1);
+              return ele; 
+          }
+          return -1;
+      }
+
+      public int Size()
+      {
+          return stack.Count;
+      }
+  }
+   ```
+</details>
+
+
+<details open>
+  <summary> go </summary>
+
+   ```go
+  package main
+
+  import "fmt"
+
+  type Stack struct {
+    stack []int
+  }
+
+  func (s *Stack) Push(n int) {
+    s.stack = append(s.stack, n)
+  }
+
+  func (s *Stack) Pop() int {
+    if len(s.stack) == 0 {
+      fmt.Println("Error: Stack is empty")
+      return 0
+    }
+    res := s.stack[len(s.stack)-1]
+    s.stack = s.stack[:len(s.stack)-1]
+    return res
+  }
+
+  func (s *Stack) Size() int {
+    return len(s.stack)
+  }
+
+   ```
+</details>
+
+
+- Problem: [Valid Parentheses](https://neetcode.io/problems/validate-parentheses)
+  ```python
+  class Solution:
+  def isValid(self, s: str) -> bool:
+      Map = {")": "(", "]": "[", "}": "{"}
+      stack = []
+
+      for c in s:
+          if c not in Map:
+              stack.append(c)
+              continue
+          if not stack or stack[-1] != Map[c]:
+              return False
+          stack.pop()
+
+      return not stack
+  ```
+
+- Problem: [Min Stack](https://neetcode.io/problems/minimum-stack)
+  ```python
+  class MinStack:
+  def __init__(self):
+      self.stack = []
+      self.minStack = []
+
+  def push(self, val: int) -> None:
+      self.stack.append(val)
+      val = min(val, self.minStack[-1] if self.minStack else val)
+      self.minStack.append(val)
+
+  def pop(self) -> None:
+      self.stack.pop()
+      self.minStack.pop()
+
+  def top(self) -> int:
+      return self.stack[-1]
+
+  def getMin(self) -> int:
+      return self.minStack[-1]
+
+  ```
 
 ## Linked Lists
 
