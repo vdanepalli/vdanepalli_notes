@@ -418,6 +418,112 @@
 
 ## DS: Trees
 
+- [BigOCheatSheet](https://www.bigocheatsheet.com/)
+- [VisuAlgo](https://visualgo.net/en/bst)
+- [DSA Mindmap](https://coggle.it/diagram/W5E5tqYlrXvFJPsq/t/master-the-interview-click-here-for-course-link)
+- [Github Link](https://github.com/aneagoie/ztm-master-the-coding-interview-ds-algo)
+
+
+- Binary Tree
+  - each node can only have 0, 1, or 2 child nodes
+  - each child can only have 1 parent
+- ![](assets/2024-10-22-23-02-32.png)
+- Perfect Binary Tree
+  - number of nodes on each level doubles as you go down
+  - number of nodes on last level = number of nodes on all previous levels + 1
+- Binary Search Tree
+  - left children are smaller than root
+  - right children are larger than root
+  - pros and cons
+    - Better than O(n)
+    - Ordered
+    - Flexible Size (Nodes -- can be put anywhere in memory)
+    - No O(1) operations
+- BSTs can be balanced -- O(logn) or unbalanced O(n)
+- [BST Insert & Lookup](https://replit.com/@aneagoie/Data-Structures-Trees-exercise-3#index.js)
+  ```javascript
+  class Node {
+  constructor(value){
+    this.left = null;
+    this.right = null;
+    this.value = value;
+  }
+  }
+
+  class BinarySearchTree {
+    constructor(){
+      this.root = null;
+    }
+    insert(value){
+      const newNode = new Node(value);
+      if (this.root === null) {
+        this.root = newNode;
+      } else {
+        let currentNode = this.root;
+        while(true){
+          if(value < currentNode.value){
+            //Left
+            if(!currentNode.left){
+              currentNode.left = newNode;
+              return this;
+            }
+            currentNode = currentNode.left;
+          } else {
+            //Right
+            if(!currentNode.right){
+              currentNode.right = newNode;
+              return this;
+            } 
+            currentNode = currentNode.right;
+          }
+        }
+      }
+    }
+    lookup(value){
+      if (!this.root) {
+        return false;
+      }
+      let currentNode = this.root;
+      while(currentNode){
+        if(value < currentNode.value){
+          currentNode = currentNode.left;
+        } else if(value > currentNode.value){
+          currentNode = currentNode.right;
+        } else if (currentNode.value === value) {
+          return currentNode;
+        }
+      }
+      return null
+    }
+    // remove
+  }
+
+  const tree = new BinarySearchTree();
+  tree.insert(9)
+  tree.insert(4)
+  tree.insert(6)
+  tree.insert(20)
+  tree.insert(170)
+  tree.insert(15)
+  tree.insert(1)
+  // JSON.stringify(traverse(tree.root))
+  tree.lookup(15);
+  tree.lookup(7);
+
+  //     9
+  //  4     20
+  //1  6  15  170
+
+  function traverse(node) {
+    const tree = { value: node.value };
+    tree.left = node.left === null ? null : traverse(node.left);
+    tree.right = node.right === null ? null : traverse(node.right);
+    return tree;
+  }
+  ```
+
+
+
 
 
 ## DS:Graphs
