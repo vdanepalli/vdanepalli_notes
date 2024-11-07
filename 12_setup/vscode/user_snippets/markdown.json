@@ -1,0 +1,68 @@
+{
+    "Two lines spaces": {
+        "prefix": "/2lines",
+        "body": [
+            "",
+            "<br/><br/>",
+            "",
+            ""
+        ]
+    },
+
+    "Open Details": {
+        "prefix": "/detalis",
+        "body": [
+            "",
+            "<details open>",
+            "<summary> ${1:Description} </summary>",
+            "",
+            "$0",
+            "</details>",
+            "", 
+            "--------", 
+            "", 
+            "<br/><br/>", 
+            ""
+        ]
+    },
+
+    "todo": {
+        "prefix": "/todo",
+        "body": [
+            "-- vdanepalli-todo $0"
+        ]
+    },
+
+    "code": {
+        "prefix": "/code",
+        "body": [
+            "```$1",
+            "$0",
+            "```"
+        ]
+    },
+
+    "wrong": {
+        "prefix": "/wrong",
+        "body": [
+            "❌ "
+        ]
+    },
+
+    "right": {
+        "prefix": "/right",
+        "body": [
+            "✅ "
+        ]
+    },
+
+    "sql": {
+        "prefix": "/sql",
+        "body": [
+            "```sql",
+            "$0",
+            "```"
+        ]
+    }
+
+}
