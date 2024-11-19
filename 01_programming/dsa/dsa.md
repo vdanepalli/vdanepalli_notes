@@ -632,6 +632,8 @@
 
 # NEETCODE 
 
+# DSA Beginners
+
 <details open>
   <summary> DSA Begineers </summary>
 
@@ -1900,11 +1902,309 @@
 
 ## Backtracking
 
+- backtracking is kinda bruteforce approach: going through every possibiity
+- ![Example Problem 1](assets/2024-11-07-12-23-52.png)
+- ![Example Problem 2](assets/2024-11-07-12-27-41.png)
+- O(n) Time and O(h) Space (for path or for recursion)
+
+```python
+class TreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.left = None
+        self.right = None
+
+def canReachLeaf(root):
+    if not root or root.val == 0:
+        return False
+    
+    if not root.left and not root.right:
+        return True
+    if canReachLeaf(root.left):
+        return True
+    if canReachLeaf(root.right):
+        return True
+    return False
+```
+
+```python
+def leafPath(root, path):
+    if not root or root.val == 0:
+        return False
+    path.append(root.val)
+
+    if not root.left and not root.right:
+        return True
+    if leafPath(root.left, path):
+        return True
+    if leafPath(root.right, path):
+        return True
+    path.pop()
+    return False
+```
+
+### [Problem 1 Path Sum](https://leetcode.com/problems/path-sum/)
+
+```python
+class Solution:
+  def hasPathSum(self, root: Treenode, sum:int) -> bool:
+    if not root:
+      return False
+
+    sum -= root.val
+    if not root.left and not root.right:
+      return sum == 0
+    return self.hasPathSum(root.left, sum) or self.hasPathSum(root.right, sum)
+```
+
+- O(N) time since we visit every node exactly once
+- O(N) space if tree is completely unbalanced and O(log N) space if it is balanced
+
+
+```python
+class Solution:
+    def hasPathSum(self, root: TreeNode, sum: int) -> bool:
+        if not root:
+            return False
+
+        de = [
+            (root, sum - root.val),
+        ]
+        while de:
+            node, curr_sum = de.pop()
+            if not node.left and not node.right and curr_sum == 0:
+                return True
+            if node.right:
+                de.append((node.right, curr_sum - node.right.val))
+            if node.left:
+                de.append((node.left, curr_sum - node.left.val))
+        return False
+```
+
+- The time and space complexities remain same but this uses iteration instead of recursion
+
+
+### [Problem 2 Subsets](https://neetcode.io/problems/subsets)
+
+![Subsets](assets/2024-11-13-11-33-30.png)
+
+```python
+# Backtracking
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        res = []
+
+        subset = []
+
+        def dfs(i):
+            if i >= len(nums):
+                res.append(subset.copy())
+                return
+            subset.append(nums[i])
+            dfs(i + 1)
+            subset.pop()
+            dfs(i + 1)
+
+        dfs(0)
+        return res
+```
+
+```python
+# Iteration
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        res = [[]]
+        
+        for num in nums:
+            res += [subset + [num] for subset in res]
+        
+        return res
+```
+
+```python
+# Bit Manipulation
+
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        n = len(nums)
+        res = []
+        for i in range(1 << n):
+            subset = [nums[j] for j in range(n) if (i & (1 << j))]
+            res.append(subset)
+        return res
+```
+
+
+### Combination Sum
+
+```python
+
+
+```
 
 ## Heap Priority Queue
 
+- min or max priorities
+- binary heap implementation -- min or max
+  - structure property -- complete binary tree (no other level has holes except the last level; if it has missing nodes, it should be at the right)
+  - order property -- for every node, all decendents should be either > or < the node 
+- if a binary tree satisfies both structure and order properties then it is qualified as a heap
+- complete binary tree
+  - left child = 2 * i
+  - right child = 2 * i + 1
+  - parent = i / 2 (round down)
+- unlike binary search trees, heaps may contain duplicate values
+- binary heaps are implemented using arrays
+  - array size = n + 1 (where n is number of nodes)
+
+- push and pop - O(log n)
+- ![Push](assets/2024-11-13-13-26-16.png)
+- ![Pop](assets/2024-11-13-13-34-41.png)
+
+```python
+def push(self, val):
+  self.heap.append(val)
+
+  i = len(self.heap) - 1
+
+  # percolate up
+
+  while i > 1 and self.heap[i] < self.heap[i // 2]:
+    tmp = self.heap[i]
+    self.heap[i] self.heap[i // 2]
+    self.heap[i // 2] = tmp
+    i = i // 2
+```
+
+```python
+
+def pop(self):
+  if len(self.heap) == 1: # heap is empty
+    return None
+  
+  if len(self.heap) == 2: # heap has only one node
+    return self.heap.pop()
+
+  res = self.heap[1]
+
+  self.heap[1] = self.heap.pop() # structure prop satisfied but not order prop
+  i = 1
+
+  # percolate down (node has no children, node only has left child, node has two children) 
+  # node can not have only right child -- violates structure property
+
+  while 2 * i < len(self.heap): # while there is a left child
+    if (2*i + 1 < len(self.heap) and # there exists a right child
+    self.heap[2*i + 1] < self.heap[2 * i] and # right child is less than left child
+    self.heap[i] > self.heap[2 * i + 1]): # swap right child 
+      tmp = self.heap[i]
+      self.heap[i] = self.heap[2*i + 1]
+      self.heap[2*i + 1] = tmp
+      i = 2 * i + 1
+    
+    elif self.heap[i] > self.heap[2 * i]: # swap left child
+      tmp = self.heap[i]
+      self.heap[i] = self.heap[2 * i]
+      self.heap[2 *i] = tmp
+      i = 2 * i
+    else:
+      break
+  return res
+```
+
+
+```python
+# Min Heap
+class Heap:
+    def __init__(self):
+        self.heap = [0]
+
+    def push(self, val):
+        self.heap.append(val)
+        i = len(self.heap) - 1
+
+        # Percolate up
+        while i > 1 and self.heap[i] < self.heap[i // 2]:
+            tmp = self.heap[i]
+            self.heap[i] = self.heap[i // 2]
+            self.heap[i // 2] = tmp
+            i = i // 2
+
+    def pop(self):
+        if len(self.heap) == 1:
+            return None
+        if len(self.heap) == 2:
+            return self.heap.pop()
+
+        res = self.heap[1]   
+        # Move last value to root
+        self.heap[1] = self.heap.pop()
+        i = 1
+        # Percolate down
+        while 2 * i < len(self.heap):
+            if (2 * i + 1 < len(self.heap) and 
+            self.heap[2 * i + 1] < self.heap[2 * i] and 
+            self.heap[i] > self.heap[2 * i + 1]):
+                # Swap right child
+                tmp = self.heap[i]
+                self.heap[i] = self.heap[2 * i + 1]
+                self.heap[2 * i + 1] = tmp
+                i = 2 * i + 1
+            elif self.heap[i] > self.heap[2 * i]:
+                # Swap left child
+                tmp = self.heap[i]
+                self.heap[i] = self.heap[2 * i]
+                self.heap[2 * i] = tmp
+                i = 2 * i
+            else:
+                break
+        return res
+
+    def top(self):
+        if len(self.heap) > 1:
+            return self.heap[1]
+        return None
+
+    def heapify(self, arr):
+        # 0-th position is moved to the end
+        arr.append(arr[0])
+
+        self.heap = arr
+        cur = (len(self.heap) - 1) // 2
+        while cur > 0:
+            # Percolate down
+            i = cur
+            while 2 * i < len(self.heap):
+                if (2 * i + 1 < len(self.heap) and 
+                self.heap[2 * i + 1] < self.heap[2 * i] and 
+                self.heap[i] > self.heap[2 * i + 1]):
+                    # Swap right child
+                    tmp = self.heap[i]
+                    self.heap[i] = self.heap[2 * i + 1]
+                    self.heap[2 * i + 1] = tmp
+                    i = 2 * i + 1
+                elif self.heap[i] > self.heap[2 * i]:
+                    # Swap left child
+                    tmp = self.heap[i]
+                    self.heap[i] = self.heap[2 * i]
+                    self.heap[2 * i] = tmp
+                    i = 2 * i
+                else:
+                    break
+            cur -= 1
+
+```
+
+![heapify](assets/2024-11-13-14-15-46.png)
+![heapify o(n)](assets/2024-11-13-14-18-17.png)
+
+- heapify runs in O(n) time
+- percolating down is more efficient than percolating up
+
 
 ## Hashing 
+
+
 
 
 ## Graphs 

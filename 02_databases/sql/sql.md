@@ -1634,5 +1634,547 @@
 -----
 
 
+# Neetcode SQL Begineers
+
+
+<details open>
+<summary> Neetcode SQL Begineers </summary>
+
+- keywords are case-insensitive; same is true for table and column names
+  
+## Tables
+
+- `CREATE TABLE table_name(col_name DATA_TYPE DEFAULT default_value, ...)`
+- `INSERT INTO table_name (selct columns) VALUES (value set 1), (value set 2), ....`
+- `ALTER TABLE table_name ADD/RENAME/DROP COLUMN col_name data_type / old_col TO new_col_name / col_name`
+- `DROP TABLE unused_table;`
+
+```sql
+CREATE TABLE users (
+    name TEXT,
+    age INTEGER,
+    join_date DATE
+);
+
+SELECT table_name, column_name, data_type
+FROM information_schema.columns
+WHERE table_name = 'videos'
+```
+
+```sql
+CREATE TABLE Cities(
+    Name TEXT, 
+    popULATION INTEGER, 
+    countRY TexT, 
+    is_Capital BOOLean, 
+    founded_Date Date
+);
+
+INSERT INTO cities (name, population, country, is_capital, founded_date) 
+VALUES ('New York', 8175133, 'United States', FALSE, '1624-01-01'),
+        ('Beijing', 21516000, 'China', TRUE, '1045-01-01');
+```
+
+```sql
+-- default values for columns
+CREATE TABLE videos(
+    id INTEGER, 
+    name TEXT Default 'Untitled', 
+    is_published BOOLEAN DEFAULT FALSE
+);
+
+INSERT INTO videos (id, name, is_published) 
+VALUES (1, 'My Video', true),
+       (2, 'Another Video', false);
+
+INSERT INTO videos (id)
+VALUES (3),
+       (4);
+
+INSERT INTO videos (name)
+VALUES ('Video with no ID');
+```
+
+
+```sql
+-- Alter 
+
+CREATE TABLE books (
+  id INTEGER,
+  title TEXT,
+  author TEXT
+);
+
+ALTER TABLE books ADD COLUMN published_year INTEGER;
+
+ALTER TABLE books RENAME COLUMN id TO isbn;
+
+ALTER TABLE books DROP COLUMN author;
+```
+
+
+## Constraints
+
+- constraint is a rule enforced on a column
+- primary key 
+  - one for table and can not contain null and unique
+  - a col or group of cols that uniquely identifies each row
+  - made of multiple columns - composite primary key or compound primary key
+  - databases create an index on primary keys to speed up queries
+- foreign key
+  - a col or group of cols in a table that references a col in another table; establishes relationship between two tables
+  - does not need to be unique but must match existing value in the referecned column
+  - referenced col must be a primary key or have unique constraint
+- check constraint 
+  - rule that defines valid values for a column; 
+  - a condition that each row should satisfy
+
+
+- commands
+  - `col_name DATATYPE NOT NULL DEFAULT 'Ash'`
+  - `col_name DATATYPE UNIQUE NOT NULL`
+  - `col_name DATATYPE PRIMARY KEY` 
+  - `col_name DATATYPE REFERENCES other_table_name(other_table_column_name_must_be_primary_key_or_unique)`
+  - `primary key (col1, col2, ...)`
+  - `col_name DATATYPE CHECK (col_name IN ('val1', 'val2', ...))` or `age INTEGER CHECK (age >= 18)`
+
+
+```sql
+CREATE TABLE products(
+    name TEXT NOT NULL DEFAULT 'Unknown', 
+    price INTEGER NOT NULL, 
+    quantity INTEGER DEFAULT 0
+);
+
+
+-- list col names and add is_unique col 
+SELECT 
+    column_name, 
+    is_nullable,
+    column_default,
+    CASE 
+        WHEN column_name IN (
+            SELECT column_name 
+            FROM information_schema.table_constraints tc
+            JOIN information_schema.constraint_column_usage ccu 
+                ON tc.constraint_name = ccu.constraint_name
+            WHERE tc.table_name = 'students' 
+                AND tc.constraint_type IN ('UNIQUE')
+        ) THEN 'YES'
+        ELSE 'NO'
+    END AS is_unique
+FROM 
+    information_schema.columns
+WHERE 
+    table_name = 'students';
+
+
+-- add is_primary_key col 
+
+SELECT 
+    c.table_name,
+    c.column_name, 
+    c.data_type, 
+    CASE 
+        WHEN kcu.column_name IS NOT NULL THEN 'YES'
+        ELSE 'NO'
+    END AS is_primary_key
+FROM 
+    information_schema.columns c
+LEFT JOIN 
+    information_schema.key_column_usage kcu
+    ON c.table_name = kcu.table_name 
+    AND c.column_name = kcu.column_name
+LEFT JOIN 
+    information_schema.table_constraints tc
+    ON kcu.constraint_name = tc.constraint_name
+    AND tc.constraint_type = 'PRIMARY KEY'
+WHERE 
+    c.table_name IN ('users', 'videos')
+ORDER BY 
+    c.table_name,
+    c.ordinal_position;
+```
+
+```sql
+-- add is_primary_key and is_foreign_key
+
+SELECT 
+    c.table_name,
+    c.column_name, 
+    c.data_type,
+    CASE 
+        WHEN pk.column_name IS NOT NULL THEN 'YES'
+        ELSE 'NO'
+    END AS is_primary_key,
+    CASE 
+        WHEN fk.column_name IS NOT NULL THEN 
+            'YES (References ' || fk.foreign_table_name || '.' || fk.foreign_column_name || ')'
+        ELSE 'NO'
+    END AS is_foreign_key
+FROM 
+    information_schema.columns c
+LEFT JOIN (
+    SELECT kcu.table_name, kcu.column_name
+    FROM information_schema.key_column_usage kcu
+    JOIN information_schema.table_constraints tc 
+        ON kcu.constraint_name = tc.constraint_name
+    WHERE tc.constraint_type = 'PRIMARY KEY'
+) pk ON c.table_name = pk.table_name AND c.column_name = pk.column_name
+LEFT JOIN (
+    SELECT 
+        kcu.table_name, 
+        kcu.column_name, 
+        ccu.table_name AS foreign_table_name,
+        ccu.column_name AS foreign_column_name
+    FROM information_schema.key_column_usage kcu
+    JOIN information_schema.referential_constraints rc 
+        ON kcu.constraint_name = rc.constraint_name
+    JOIN information_schema.constraint_column_usage ccu 
+        ON rc.unique_constraint_name = ccu.constraint_name
+) fk ON c.table_name = fk.table_name AND c.column_name = fk.column_name
+WHERE 
+    c.table_name IN ('departments', 'employees')
+ORDER BY 
+    c.table_name,
+    c.ordinal_position;
+```
+
+```sql
+-- composite primary key
+
+SELECT 
+    c.table_name,
+    c.column_name, 
+    c.data_type, 
+    CASE 
+        WHEN kcu.column_name IS NOT NULL THEN 
+            CASE 
+                WHEN COUNT(*) OVER (PARTITION BY kcu.constraint_name) > 1 THEN 'YES (Composite)'
+                ELSE 'YES'
+            END
+        ELSE 'NO'
+    END AS is_primary_key
+FROM 
+    information_schema.columns c
+LEFT JOIN 
+    information_schema.key_column_usage kcu
+    ON c.table_name = kcu.table_name 
+    AND c.column_name = kcu.column_name
+LEFT JOIN 
+    information_schema.table_constraints tc
+    ON kcu.constraint_name = tc.constraint_name
+    AND tc.constraint_type = 'PRIMARY KEY'
+WHERE 
+    c.table_name = 'orders'
+ORDER BY 
+    c.ordinal_position;
+```
+
+```sql
+-- check constraint
+SELECT 
+    c.table_name,
+    c.column_name, 
+    c.data_type, 
+    CASE 
+        WHEN pk.column_name IS NOT NULL THEN 'YES'
+        ELSE 'NO'
+    END AS is_primary_key,
+    COALESCE(chk.check_clause, 'NO') AS check_constraint
+FROM 
+    information_schema.columns c
+LEFT JOIN (
+    SELECT kcu.table_name, kcu.column_name
+    FROM information_schema.key_column_usage kcu
+    JOIN information_schema.table_constraints tc
+        ON kcu.constraint_name = tc.constraint_name
+        AND tc.constraint_type = 'PRIMARY KEY'
+) pk ON c.table_name = pk.table_name AND c.column_name = pk.column_name
+LEFT JOIN (
+    SELECT ccu.table_name, ccu.column_name, 
+           pg_get_constraintdef(con.oid) AS check_clause
+    FROM pg_constraint con
+    JOIN pg_namespace nsp ON nsp.oid = con.connamespace
+    JOIN pg_class cls ON cls.oid = con.conrelid
+    JOIN information_schema.constraint_column_usage ccu
+        ON con.conname = ccu.constraint_name
+        AND nsp.nspname = ccu.table_schema
+        AND cls.relname = ccu.table_name
+    WHERE con.contype = 'c'
+) chk ON c.table_name = chk.table_name AND c.column_name = chk.column_name
+WHERE 
+    c.table_name = 'products'
+ORDER BY 
+    c.ordinal_position;
+```
+
+
+## Data Types
+
+- BOOLEAN `(FALSE, false, 'f', 'N', 'no', 'OFF', '0' | TRUE, true, 't', 'y', 'YES', 'on', '1')`
+- Numbers
+  - SMALLINT 2 byte signed integer -32768 to 32767
+  - INTEGER 4 byte signed integer
+  - BIGINT 8 byte signed integer
+  - FLOAT 4 byte floating point number
+  - DOUBLE PRECISION 8 byte floating point number
+  - DECIMAL fixed-point number where precision is specified -- `DECIMAL(10, 2)` -- 10 total, 8 before . and 2 after .
+  - NUMERIC is identical to DECIMAL -- `NUMERIC(10, 1)`
+- Strings
+  - CHAR(n) -- fixed length character string with max length of n
+  - VARCHAR(n) -- variable-length character string with max length of n
+  - TEXT -- variable length character string, no max length
+- Dates
+  - DATE -- year, month, day
+  - TIME -- hour, minute, second
+  - TIMESTAMP -- date and time
+- Arrays -- 1 indexed in PostgreSQL
+  - DATATYPE[] `course_list TEXT[]` and `'INSERT INTO (ARRAY['Math', 'Science'])`
+  - `insert into dates values (ARRAY['2024-01-24', '2024-08-02']::DATE[])`
+- Enum -- data type -- similar to CHECK; reusable across tables and columns
+  - `CREATE TYPE` is used to create ENUM
+  - `CREATE TYPE status AS ENUM('active', 'inactive', 'pending'); CREATE TABLE users(status status);`
+- Auto Increment
+  - SERIAL -- shorthand for autoincrementing integer column;
+  - IDENTITY -- introduced in postgreSQL 10, sql standard way of creatng autoincrementing cols
+  - SEQUENCES -- define your own sequence and set start and increment values. 
+    - can be shared by tables, which means both tables will have unique sequence of integers, no overlap
+  - ex
+    - `CREATE SEQUENCE ex_id_seq START WITH 10 INCREMENT BY 10;` `CREATE TABLE ex(id_0 integer default nextval('ex_id_seq'))`
+- UUID (Universally Unique Identifier)
+  - 16 byte value -- random generated and is guaranteed to be unique across all instances of database
+  - `id UUID PRIMARY KEY DEFAULT uuid_generate_v4()`
+
+```sql
+CREATE SEQUENCE example_id_seq START WITH 10 INCREMENT BY 10;
+
+CREATE TABLE example(
+  id_0 INTEGER PRIMARY KEY, 
+  id_1 SERIAL, 
+  id_2 INTEGER GENERATED ALWAYS AS IDENTITY, -- does not allow explicit insertion unlike SERIAL
+  id_3 INTEGER DEFAULT nextval('example_id_seq')
+);
+```
+
+
+## Insert
+
+```sql
+INSERT INTO table_name (dates_array_col)
+VALUES
+(ARRAY['2024-01-24', '2024-08-02']::DATE[]) -- if ::DATE[] is omitted, causes error
+```
+
+## Select
+
+- `=` is not reserved for assignment and hence can be safely used for equality check
+- `!=` or `<>` for not equal to
+- `< <= > >=` -- for comparison
+- `IS NULL` or `IS NOT NULL`
+- `DISTINCT col1, col2, ...`
+- `LIKE _%` `%` matches any sequence of characters; and `_` matches any single character
+- `IN (....)`
+- `BETWEEN low AND high` -- inclusive 
+- `1_000_000_000` is same as `1000000000`
+- `ORDER BY ASC / DESC`
+- `WHERE`
+- `LIMIT`  
+- `SELECT ... FROM ... WHERE ... ORDER BY ... LIMIT ...`
+
+## Update
+
+- `UPDATE table_name SET col1 = ..., col2 = ...` -- updates all rows
+- `UPDATE players SET score = 0 WHERE score < 0`
+- `UPDATE .....  RETURNING *;` -- return alll columns for the rows that were updated; can also specify `col1, col2, ...`
+
+## Delete
+
+- `DELETE from table_name` -- deletes all rows; 
+- `TRUNCATE TABLE table_name` -- does the same as above but does not log
+
+- delete operates on entire rows and not on specific columns like select and update
+- truncate is more efficient than delete because it does not log the deleted rows and deletes all rows at once rather than deleting one by one
+
+## Aggregation
+
+- `SUM(price * quantity)`, `sum(gold + silver + bronze) as total_medals`
+- `AVG(score)`
+- `ROUND(...)`
+- count
+  - `COUNT(*)` -- includes rows with null values; 
+  - `COUNT(liked_by_id)` -- excludes rows where this col has null values
+  - `COUNT(DISTINCT liked_by_id, tweet_id)`
+- `LENGTH(text_col)`
+- `MIN()`
+- `MAX()`
+- `GROUP BY col1, col2, ...`
+- `HAVING ...` -- filters group by result; performed after group by
+- `SELECT .... FROM ... WHERE .... GROUP BY ... HAVING .... ORDER BY ... LIMIT`
+
+## Joins
+
+- JOIN is part of the FROM clause
+- `CROSS JOIN`
+- `INNER JOIN ... ON ...`
+- `JOIN ... ON ...`
+- `LEFT JOIN ... ON ....`
+- `RIGHT JOIN ... ON ...`
+- `FULL JOIN ... ON ...` -- all mactching rows, all rows from left and all rows from right which do not have match
+
+## Normalization
+
+- eliminate redundant data and ensure data is consistent
+- `user_id INTEGER UNIQUE REFERENCES users(id)` -- one to zero/one relationship (primary key and foreign key with unique constraint on foreign key)
+- `user_id INTEGER REFERENCES users(id)` -- one to many relationship (primary key and foreign key)
+- create intermediate table containing foreign keys to two primary keys --- many to many relationship 
+
+```sql
+CREATE TABLE students (
+  id INTEGER PRIMARY KEY,
+  name TEXT
+);
+
+CREATE TABLE classes (
+  id INTEGER PRIMARY KEY,
+  name TEXT
+);
+
+CREATE TABLE student_classes (
+  student_id INTEGER REFERENCES students(id),
+  class_id INTEGER REFERENCES classes(id)
+);
+```
+
+
+```sql
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY,
+    name TEXT
+);
+
+CREATE TABLE products (
+    id INTEGER PRIMARY KEY,
+    name TEXT
+);
+
+CREATE TABLE orders (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER,
+    product_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+```
+
+## Subqueries
+
+- `not exists (select 1 from posts where users.id = posts.user_id)` -- runs for each user from outer query
+- `EXISTS` -- returns True or False
+- `ANY`
+- `ALL`
+- CTE - Common Table Expressions `WITH cte_name AS (select ....)` -- no semicolon at the end
+- `CASE WHEN ... THEN ... WHEN ... THEN .. ELSE ... END AS ...`
+
+```sql
+-- subqueries in where clause
+SELECT *
+FROM employees
+WHERE salary > (
+  SELECT AVG(salary) FROM employees
+);
+
+SELECT *
+FROM employees
+WHERE salary IN (
+  (SELECT MIN(salary) FROM employees),
+  (SELECT MAX(salary) FROM employees)
+);
+```
+
+
+```sql
+-- subqueries in from clause
+SELECT e.name, e.salary
+FROM employees e
+JOIN (
+  SELECT AVG(salary) AS avg_salary 
+  FROM employees 
+  WHERE department = 'Finance'
+) AS avg
+ON e.salary > avg.avg_salary;
+```
+
+```sql
+-- checks for all ids returned by subquery
+SELECT name
+FROM customers
+WHERE id = ANY (
+    SELECT DISTINCT customer_id
+    FROM orders
+    WHERE price > 150
+);
+```
+
+```sql
+-- customers with budget > all the budgets in subquery
+SELECT name
+FROM customers c
+WHERE c.budget > ALL (
+    SELECT o.price
+    FROM orders o
+    WHERE o.product_name = 'Laptop'
+);
+```
+
+```sql
+WITH max_price_orders AS (
+    SELECT customer_id, MAX(price) as max_price
+    FROM orders
+    GROUP BY customer_id
+    HAVING MAX(price) < 100
+)
+
+SELECT c.name
+FROM customers c
+JOIN max_price_orders mpo ON c.id = mpo.customer_id
+ORDER BY c.name;
+
+
+
+SELECT name, 
+        CASE
+            WHEN department = 'Engineering' THEN 'yes'
+            ELSE 'no'
+        END AS is_engineering
+FROM employees
+ORDER BY name;
+```
+
+## Indexes
+
+- think of indexes as table of contents for data inside table
+- indexes speed up read queries but slow down write queries
+- `CREATE INDEX col_name_idx ON table_name (col_name)`
+- `CREATE INDEX col_name_idx ON pokemon USING hash (name)`
+- `CREATE INDEX col_name_idx ON pokemon USING btree (name)`
+- `SELECT * FROM pg_indexes WHERE tablename = 'pokemon'`
+
+<br/><br/>
+
+- b-tree index -- default index type
+  - useful for range queries and equality checks
+  - O(h) lookups
+- hash index
+  - efficient for equality checks on small data types
+  - O(1) lookups
+
+</details>
+
+--------
+
+<br/><br/>
+
+
 
 # 
