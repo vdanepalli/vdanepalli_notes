@@ -309,7 +309,159 @@
 
 ## How to solve coding problems
 
+- can you solve the companies problems?
+- genius, but can't talk to others?
+- thought process? tradeoffs?
+- foundation: big o
 
+
+<br/><br/>
+
+- analytic skills
+- coding skills
+- technical skills
+- communication skills
+
+
+<br/><br/>
+
+- existence, how to look for answers
+- why why why
+
+1. write key points at top. make sure you have all the questions. show how organized you are 
+2. double check: inputs and outputs
+3. most important value of the problem: time, space, and memory. what's main goal?
+4. don't be annoying 
+5. naive or bruteforce approach. shows you are able to think well and critically
+6. tell why this is not the best approach
+7. walk through your solution, comment things, see where you can break things. repetition, bottlenecks, unnecessary works? did you use all the information interviewer gave you?
+8. before writing code, walk through your code and write down steps to follow
+9. modularize your code from beginning
+10. never start a whiteboard interview not being sure of how things are going to work out. break things up in functions. start with easy part
+11. think of error checks breaking code. never make assumptions about input. check for false inputs. comment in code the checks you want to do, write function, write tests that make function fail
+12. write code that reads well. no confusing names like i, j
+13. test code: no params, 0, undefined, null, massive arrays, async code, ... ask if you can make assumptions about code, can you make answer return error. are you repeating yourself?
+14. talk about where you would improve code, how it works, different approaches, readable, what would you google to improve, performance, ask interesting solutions interviewer has seen to the problem
+15. extension questions, too large to fit in memory, input arriving as stream, -- scale. divide and conquer approach - distributed processing of data and only read certain chunks of input, write output back to disk, and combine later
+
+
+<br/><br/>
+
+1. it works
+2. good use of data structures
+3. code re-use; do not repeat yourself
+4. modular code -- readable, maintainable, testable
+5. avoid O(n^2)
+6. low space complexity -- avoding recursion (stack overflow), copying large arrays (memory)
+
+
+<br/><br/>
+
+1. hashmaps for improving time complexity
+2. sorted, binary tree O(logn); divide and conquer
+3. try sorting input
+4. hashtables (precomputed information -- sorted) -- optimize code
+5. time vs space tradeoff
+6. follow advice/tips/hints
+7. space time tradeoffs: hashtables -- takes space but saves time
+
+
+<br/><br/>
+
+- given 2 arrays, create a fucntion that let's users know if it contains any common elementes
+- 2 parameters - arrays - no size limit 
+- return true or false 
+- nested loops -- O(n^2)
+```js
+const a1 = ['a', 'b', 'c', 'x'];
+const a2 = ['z', 'x', 'y'];
+
+function containsCommonItem(a1, a2){
+  for (let i=0; i < a1.length; i++ ){
+    for (let j = 0; j < a2.lenght; j++){
+      if (a1[i] === a2[j]){
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+containsCommonItem(a1, a2);
+```
+
+- say a1 is converted to object,{a: true, b:true, ... }; check a2[ index ] === obj.properties
+```js
+function containsCommonItem2(a1, a2){
+  // loop through first array and create object where properties === items in array
+  // loop through second array and chekc if item in second exists in first 
+
+  let map = {};
+  for (let i = 0; i< a1.length; i++){
+    if (!map[a[i]]){
+      const item = a1[i];
+      map[item] = true;
+    }
+  }
+
+  console.log(map)
+
+  for(let i=0; i< a2.length; i++){
+    if(map[a2[i]]) {
+      return true
+    }
+  }
+
+  return false
+}
+```
+
+- how can i break this. make error free functions; can we assume always inputs are provided correctly (number and format)
+- are inputs always provided in the expected format
+- language specific optimization
+
+```js
+function containsCommonItem3(a1, a2){
+  return a1.some(item => a2.include(item))
+}
+```
+
+- ideally, function should just do one task at a time
+- think like an engineer
+
+- has pair with sum?
+```js
+const a1 = [-1, 0, 1, 2, 3, 4];
+const sum = 4
+
+function hasPairWithSum(a1, sum){
+  var len = a1.length;
+
+  for(var i = 0; i < len-1; i++){
+    for(var j = i+1; j < len; j++){
+      if (a[i] + a[j] === sum) { 
+        return true;
+      }
+    }
+  }
+
+  return false; 
+}
+
+function hasPairWithSum2(arr, sum){
+  const mySet = new Set();
+  const len = arr.length;
+  
+  for(let i=0; i < len; i++){
+    if(mySet.has(arr[i])){
+      return true; 
+    }
+    mySet.add(sum - arr[i]);
+  }
+  return false;
+}
+```
 
 ## DS: Introduction
 
@@ -402,7 +554,20 @@
 
 ## DS: Arrays
 
+- lookup and push O(1)
+- insert and delete O(n)
 
+```js
+const strings = [1, 2, 3, 4];
+
+strings.push(5);
+strings.pop();
+
+strings.unshift(0);
+strings.splice(start, deleteCount, item_to_add)
+
+
+```
 
 ## DS: Hash Tables
 
@@ -528,11 +693,121 @@
 
 ## DS:Graphs
 
+- a little network; connection to nodes/vertex; edges - links
+- directed vs undirected graphs
+- weighted vs unweighted graphs
+- cyclic vs acyclic graphs
+- Directed Acyclic Graph : DAGs
 
+
+<br/><br/>
+
+```js
+// Edge List
+const graph = [[0, 2], [2, 3], [2, 1], [1, 3]];
+
+// Adjacent List
+const graph = [[2], [2, 3], [0,1,3], [1,2]];
+
+// Adjacent Matrix
+const graph = [
+  [0, 0, 1, 0], 
+  [0, 0, 1, 1], 
+  [1, 1, 0, 1], 
+  [0, 1, 1, 0]
+];
+```
+
+
+
+<br/><br/>
+
+```js
+class Graph{
+  constructor(){
+    this.numberOfNodes = 0;
+    this.adjacentList = {
+      0: [1, 2]
+    };
+  }
+
+  addVertex(node){
+    this.adjacentList[node] = [];
+    this.numberOfNodes++;
+  }
+
+  addEdge(node1, node2){
+    // Undirected Graph
+    if (!this.adjacentList[node1].includes(node2)) {
+      this.adjacentList[node1].push(node2);
+    }
+    if (!this.adjacentList[node2].includes(node1)) {
+      this.adjacentList[node2].push(node1);
+    }
+  }
+
+  showConnections(){
+    const allNodes = Object.keys(this.adjacentList);
+    for (let node of allNodes) {
+      let nodeConnections = this.adjacentList[node];
+      let connections = "";
+      let vertex;
+      for (vertex of nodeConnections) {
+        connections += vertex + " ";
+      }
+      console.log(node + "-->" + connections);
+    }
+  }
+}
+
+const myGraph = new Graph();
+myGraph.addVertex("0");
+myGraph.addVertex("1");
+myGraph.addVertex("2");
+myGraph.addVertex("3");
+myGraph.addVertex("4");
+myGraph.addVertex("5");
+myGraph.addVertex("6");
+myGraph.addEdge("3", "1");
+myGraph.addEdge("3", "4");
+myGraph.addEdge("4", "2");
+myGraph.addEdge("4", "5");
+myGraph.addEdge("1", "2");
+myGraph.addEdge("1", "0");
+myGraph.addEdge("0", "2");
+myGraph.addEdge("6", "5");
+
+myGraph.showConnections();
+```
+
+<br/><br/>
+
+- scaling is hard. 
+- relationships
+- Neo4j Graph Database
 
 ## Algorithms : Recursion
 
+- steps; performs actions on data / data structures
+- sorting, dynamic programming, bfs + dfs (searching), recursion 
+- `ls -R` -- recrsive list
+- recursive function : refers to itself
+- repeated sub tasks 
+- searching, sorting, traversing tree, dom traversal 
+- stackoverflow 
+- computer needs to allocate memory to remember call stacks 
 
+
+```js
+function inception(){
+  debugger;
+  inception();
+}
+```
+
+- base case; when to stop recursion 
+- recursive case, and base case
+- 
 
 ## Algorithms : Sorting
 
